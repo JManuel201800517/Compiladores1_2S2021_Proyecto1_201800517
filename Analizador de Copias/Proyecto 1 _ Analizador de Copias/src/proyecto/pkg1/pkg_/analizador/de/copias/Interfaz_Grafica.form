@@ -270,12 +270,12 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton9">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ejecutar"/>
+        <Property name="text" type="java.lang.String" value="Ejecutar analisis 1"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton10">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Consola"/>
+        <Property name="text" type="java.lang.String" value="Ejecutar analisis 2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton11">

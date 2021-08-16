@@ -157,9 +157,9 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
             }
         });
 
-        jButton9.setText("Ejecutar");
+        jButton9.setText("Ejecutar analisis 1");
 
-        jButton10.setText("Consola");
+        jButton10.setText("Ejecutar analisis 2");
 
         jButton11.setText("Reporte de Errores");
 
