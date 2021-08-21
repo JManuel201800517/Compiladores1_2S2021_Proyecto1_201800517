@@ -5,6 +5,10 @@
  */
 package proyecto.pkg1.pkg_.analizador.de.copias;
 
+import java.io.StringReader;
+import analizadores.*;
+//import java_cup.parser;
+
 /**
  *
  * @author Propietario
@@ -16,6 +20,14 @@ public class Proyecto1_AnalizadorDeCopias {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        try{
+             parser sintactico;
+             sintactico = new parser(new lexico(new StringReader("2.34*2+3*2+100")));
+             sintactico.parse();
+        
+         } catch (Exception e){
+        
+         }
     }
     
 }

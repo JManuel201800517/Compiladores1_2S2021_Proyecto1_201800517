@@ -5,14 +5,20 @@
  */
 package proyecto.pkg1.pkg_.analizador.de.copias;
 
+import analizadores.*;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -20,6 +26,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Propietario
  */
 public class Interfaz_Grafica extends javax.swing.JFrame {
+    
+    public static ArrayList<error> listaErrores = new ArrayList<error>();
+    
+    public static List<Lista> listaString = new ArrayList<>();
+    
+    private PrintStream standardOut;
 
     /**
      * Creates new form Interfaz_Grafica
@@ -36,6 +48,19 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton12.setVisible(false);
         jButton13.setVisible(false);
         jButton14.setVisible(false);
+        
+        PrintStream printStream = new PrintStream(new Consola(jTextArea1));
+        System.setOut(printStream);
+        System.setErr(printStream);
+        
+        //for (int i = 0; i < listaString.size(); i++) {
+            //System.out.println(" ");
+          //  System.out.println("Este es un error lexico: "+listaString.get(i).getValorError()+", en la linea: "+listaString.get(i).getFila()+", en la columna: "+listaString.get(i).getColumna());
+          //  System.out.println(" ");
+        //}
+        
+        //System.out.println("Hola");
+        
     }
     
     
@@ -158,6 +183,11 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         });
 
         jButton9.setText("Ejecutar analisis 1");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jButton10.setText("Ejecutar analisis 2");
 
@@ -362,6 +392,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton12.setVisible(false);
         jButton13.setVisible(false);
         jButton14.setVisible(false);
+        jButton10.setEnabled(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -418,6 +449,21 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         Guardar();
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+        try{
+             System.out.println("Iniciando Analisis Lexico"); 
+             parser sintactico;
+             sintactico = new parser(new lexico(new StringReader(textArea1.getText())));
+             sintactico.parse();  
+             System.out.println("Fin Analisis Sintactico"); 
+
+        
+         } catch (Exception e){
+        
+         }
+    }//GEN-LAST:event_jButton9ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -444,6 +490,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Interfaz_Grafica.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -478,7 +525,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
+    public javax.swing.JTextArea jTextArea1;
     private java.awt.TextArea textArea1;
     // End of variables declaration//GEN-END:variables
 
