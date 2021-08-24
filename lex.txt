@@ -1,0 +1,36 @@
+"(" {return new Symbol(sym.PAR1,yycolumn,yyline,yytext());}
+")" {return new Symbol(sym.PAR2,yycolumn,yyline,yytext());}
+
+"<" {return new Symbol(sym.MENOR,yycolumn,yyline,yytext());}
+">" {return new Symbol(sym.MAYOR,yycolumn,yyline,yytext());}
+"=" {return new Symbol(sym.IGUAL,yycolumn,yyline,yytext());}
+"!" {return new Symbol(sym.NOT,yycolumn,yyline,yytext());}
+
+";" {return new Symbol(sym.PUNTOYCOMA,yycolumn,yyline,yytext());}
+
+"{" {return new Symbol(sym.LLAVE1,yycolumn,yyline,yytext());}
+"}" {return new Symbol(sym.LLAVE2,yycolumn,yyline,yytext());}
+
+"," {return new Symbol(sym.COMA,yycolumn,yyline,yytext());}
+
+"number" {return new Symbol(sym.PR_NUMBER,yyline,yychar, yytext());} 
+"boolean" {return new Symbol(sym.PR_BOOLEAN,yyline,yychar, yytext());} 
+"string" {return new Symbol(sym.PR_STRING,yyline,yychar, yytext());} 
+"double" {return new Symbol(sym.PR_DOUBLE,yyline,yychar, yytext());}
+
+"if" {return new Symbol(sym.PR_IF,yyline,yychar, yytext());} 
+"else" {return new Symbol(sym.PR_ELSE,yyline,yychar, yytext());} 
+"for" {return new Symbol(sym.PR_FOR,yyline,yychar, yytext());} 
+"while" {return new Symbol(sym.PR_WHILE,yyline,yychar, yytext());} 
+"func" {return new Symbol(sym.PR_FUNC,yyline,yychar, yytext());} 
+
+
+
+{CADENA} {return new Symbol(sym.CADENA,yyline,yycolumn, yytext());} 
+{ID} {return new Symbol(sym.IDENTIFICADOR,yycolumn,yyline,yytext());}
+
+
+
+LETRA =[a-zA-ZÑñ]+
+ID =({LETRA}|("_"{LETRA}))({LETRA}|{ENTEROS}|"_")*
+CADENA =[\"\“\'] [^\"\”\'\n]* [\"\”\'\n]

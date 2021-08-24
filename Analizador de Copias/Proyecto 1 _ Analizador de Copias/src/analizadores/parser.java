@@ -108,12 +108,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
 
-
     public void syntax_error(Symbol s){
-        System.out.println("Erroe Sintactico en la linea "+s.left+" Columna "+s.right+". No se esperaba este componente: "+s.value+".");
-    }
-
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
         System.out.println("Erroe Sintactico en la linea "+s.left+" Columna "+s.right+". No se esperaba este componente: "+s.value+".");
     }
 
@@ -163,8 +158,7 @@ class CUP$parser$actions {
 		int var1left = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int var1right = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Double var1 = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		System.out.println("Fin Analisis Lexico");
-System.out.println(var1);
+		System.out.println(var1);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("INICIO",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
