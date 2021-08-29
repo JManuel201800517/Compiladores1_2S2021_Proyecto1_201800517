@@ -1,4 +1,4 @@
-package analizadores;
+package analizadores2;
 import java_cup.runtime.*;
 
 parser code
@@ -8,64 +8,50 @@ parser code
     }
 :}
 
-terminal String MAS, MENOS, POR, DIVIDIDO;
+terminal String CORCHETE1, CORCHETE2;
 terminal String ENTEROS, DECIMALES, LETRAS, COMBINACION, CADENAS;
 terminal String PAR1, PAR2;
-terminal String MENOR, MAYOR, IGUAL, NOT;
+terminal String IGUAL;
+terminal String CDM;
 terminal String PUNTOYCOMA, DOSPUNTOS;
 terminal String LLAVE1, LLAVE2;
 terminal String COMA, PUNTO, COMILLA;
 terminal String COMENTARIOS, COMENINICIAL, COMENFINAL;
-terminal String AND, OR, PORCENTAJE;
+terminal String MONEDA;
 
-terminal String VAR, LET, CONST;
-terminal String IF, ELSE;
-terminal String CLASS;
-terminal String FOR;
-terminal String WHILE, DO;
-terminal String SWITCH, BREAK, DEFAULT, CASE;
-terminal String CONSOLE, REQUIRE;
-
+terminal String COMPARE, STRING, DOUBLE;
+terminal String DEFINIRGLOBALES, GENERARREPORTEESTADISTICO;
+terminal String GRAFICABARRAS, GRAFICAPIE, GRAFICALINEAS;
+terminal String PUNTAJEESPECIFICO, PUNTAJEGENERAL;
+terminal String TITULO, TITULOX, TITULOY;
+terminal String EJEX, VALORES;
+terminal String ARCHIVO;
 
 
 non terminal Inicio;
 non terminal LlavesAp;
-non terminal LlavesMet;
+non terminal LlavesGra;
 non terminal LlavesFN;
-non terminal Opcion;
-non terminal Instruccion;
-non termianl Consola;
-non terminal Sentencias;
-non terminal SentenciaIf-Else;
-non terminal IfElseIf;
-non terminal SentenciaFor;
-non terminal SentenciaWhile;
-non terminal Comando;
-non terminal SentenciaSwitch;
-non terminal Casos;
-non terminal Elegir;
-non terminal Llamada;
-non terminal Metodos;
-non terminal Variables;
-non terminal PalabrasReservadas;
+non terminal LlavesCom;
+non terminal PalabraInicial;
+non termianl PalabraReservadaGrafica;
+non terminal PalabraReservadaInstruccion;
+non terminal TituloGrafica;
+non terminal EjeVariableX;
+non terminal Valor;
+non terminal Direccion;
+non terminal Buscador;
+non terminal PalabraReservada;
 non terminal FinalLinea;
-non terminal Caracter;
 non terminal Direccion2;
 non terminal Comentario;
 non terminal Alfabeto;
 non terminal Numero;
-non terminal Operaciones;
-non terminal Expresiones;
-non terminal Logicos;
-non terminal Relacionales;
 
 
-precedence left MAS, MENOS;
-precedence left POR, DIVIDIDO;
-precedence left MAYOR, MENOR, IGUAL;
-precedence right NOT;
+precedence left IGUAL;
 
-start with Inicio;
+start with INICIO;
 
 INICIO::=EXP:var1 {:System.out.println(var1);:};
 
