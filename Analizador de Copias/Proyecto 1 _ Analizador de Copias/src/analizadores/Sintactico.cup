@@ -58,6 +58,7 @@ non terminal Operaciones;
 non terminal Expresiones;
 non terminal Logicos;
 non terminal Relacionales;
+non terminal VariableGlobal;
 
 
 precedence left MAS, MENOS;
@@ -67,13 +68,197 @@ precedence right NOT;
 
 start with Inicio;
 
-INICIO::=EXP:var1 {:System.out.println(var1);:};
 
-EXP ::=
- |  EXP:var1     mas       EXP:var2    {:RESULT=var1+var2;:}
- |  EXP:var1     menos     EXP:var2    {:RESULT=var1-var2;:}
- |  EXP:var1     por       EXP:var2    {:RESULT=var1*var2;:}
- |  EXP:var1     dividido  EXP:var2    {:RESULT=var1/var2;:}
- |  entero:var1                        {:RESULT=new Double(var1);:}
- |  decimal:var1                       {:RESULT=new Double(var1);:}
+Inicio ::= CLASS Alfabeto:alf LlavesAp:enc                          {::}
+        |  COMENTARIOS Comentario:com Inicio:inic                   {::}
+        |  COMENINICIAL Comentario:com COMENFINAL Inicio:inic       {::}
+;
+
+
+LlavesAp ::= LLAVE1 Opcion:op   {::};
+
+
+LlavesMet ::= LLAVE1 Instruccion:ins   {::};
+
+
+LlavesFN ::= LLAVE2 Opcion:op                                                            {::}
+          | Opcion:op                                                                    {::}
+          | Terminacion:ter                                                              {::}
+          | COMENTARIOS Comentario:com LlavesFN:inic                                     {::}
+          | COMENINICIAL Comentario:com COMENFINAL LlavesFN:inic                         {::}
+;
+
+
+Opcion ::= Metodos:met                   {::}
+         | PalabrasReservadas:res        {::}
+         | Sentencias:sen                {::}
+         | Llamada:da                    {::}
+         | Consola:con                   {::}
+         | LLAVE2                        {::}
+;
+
+
+Instruccion ::= PalabrasReservadas:res    {::}
+              | Sentencias:sen            {::}
+              | Llamada:da                {::}
+              | LlavesFN:fin              {::}
+              | Consola:con               {::}
+              | LLAVE2                    {::}
+              | BREAK PUNTOYCOMA          {::}
+; 
+
+
+Consola ::= CONSOLE PAR1 Operaciones:op PAR2 FinalLinea:fin   {::};
+
+
+Sentencias ::= SentenciaIf-Else:sif             {::}
+             | SentenciaFor:sfo                 {::}
+             | SentenciaWhile:sew               {::}
+             | SentenciaSwitch:ssw              {::}
+;
+
+
+SentenciaIf-Else ::= IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins SentenciaIf-Else:sen    {::}
+                   | IfElseIf:elif                                                              {::}
+                   | Instruccion:ins                                                            {::}
+;
+
+
+IfElseIf ::= ELSE LLAVE1 IfElseIf:sen                                 {::}
+           | ELSE IF PAR1 Operaciones:op PAR2 LLAVE1 IfElseIf:sen     {::}
+           | Instruccion:ins                                          {::}                                        
+;
+
+
+SentenciaFor ::= FOR PAR1 Comando:com PUNTOYCOMA Relacionales:res PUNTOYCOMA Expresiones:exp PAR2 LLAVE1 Instruccion:ins   {::};
+
+
+SentenciaWhile ::= WHILE PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins                     {::}
+                 | DO LLAVE1 Instruccion:ins WHILE PAR1 Operaciones:op PAR2 FinalLinea:fin   {::}
+;
+
+
+Comando ::= VAR Alfabeto:alf IGUAL Caracter:car      {::}
+          | LET Alfabeto:alf IGUAL Caracter:car      {::}
+          | CONST Alfabeto:alf IGUAL Caracter:car    {::}
+          | VariableGlobal:vg IGUAL Caracter:car     {::}
+;
+
+
+SentenciaSwitch ::= SWITCH PAR1 Elegir:ele PAR2 LLAVE1 Casos:cas        {::};
+
+
+Casos ::= CASE ENTEROS:ent DOSPUNTOS Instruccion:ins Casos:cas      {::}
+        | DEFAULT DOSPUNTOS Instruccion:ins                        {::}
+;
+
+
+Elegir ::= ENTEROS:ent        {::}
+         | VariableGlobal:vg  {::}
+;
+
+
+Llamada ::= MetodoReservado:mr PAR1 Variables:var PAR2 FinalLinea:fin        {::}
+          | MetodoReservado:mr PAR1 PAR2 FinalLinea:fin                      {::}
+;
+
+
+Metodos ::= Alfabeto:alf PAR1 Variables:var PAR2 LlavesMet:met        {::}
+          | Alfabeto:alf PAR1 PAR2 LlavesMet:met                      {::}
+;
+
+
+Variables ::= Variables:var1 COMA Variables:var2     {::}
+            | VariableGlobal:vg                      {::}
+            | Numero:num                             {::}
+            | CADENAS Alfabeto:alf1 CADENAS          {::}
+;
+
+
+PalabrasReservadas ::= VAR Alfabeto:alf IGUAL Caracter:car FinalLinea:fin   {::}
+                     | LET Alfabeto:alf IGUAL Caracter:car FinalLinea:fin   {::}
+                     | CONST Alfabeto:alf IGUAL Caracter:car FinalLinea:fin {::}
+;
+
+
+FinalLinea ::= PUNTOYCOMA Instruccion:ins    {::}
+             | Instruccion:ins               {::}
+;
+
+
+Caracter ::= VariableGlobal:vg            {::}
+           | Numero:num                   {::}
+           | CADENAS Alfabeto:alf CADENAS {::}
+           | Expresiones:exp              {::}
+           | REQUIRE PAR1 CADENAS PUNTO PUNTO Direccion2:dic2 CADENAS PAR2 
+;
+
+
+Direccion2 ::= Alfabeto:alf                      {::}
+             | Alfabeto:alf Direccion2:dic2      {::}
+             | DIVIDIDO Direccion2:dic2          {::} 
+;
+
+
+Comentario ::= Alfabeto:alf Comentario:com       {::}
+             | Numero:num Comentario:com         {::}
+             | Alfabeto:alf                      {::}
+             | Numero:num                        {::}
+;
+
+
+Alfabeto ::= LETRAS:let        {::}
+           | ENTEROS:ent       {::}
+           | COMBINACION:com   {::}
+;
+
+
+Numero ::= ENTEROS:ent        {::}
+         | DECIMALES:dec      {::}
+;
+
+
+Operaciones ::= Expresiones:exp  {::}
+              | Logicos:log      {::}
+              | Relacionales:res {::}
+;
+
+
+Expresiones ::= Expresiones:exp1 MAS Expresiones:exp2         {::}
+              | Expresiones:exp1 MENOS Expresiones:exp2       {::}
+              | Expresiones:exp1 POR Expresiones:exp2         {::}
+              | Expresiones:exp1 DIVIDIDO Expresiones:exp2    {::}
+              | Expresiones:exp1 POR POR Expresiones:exp2     {::}
+              | Expresiones:exp1 PORCENTAJE Expresiones:exp2  {::}
+              | Expresiones:exp1 MAS MAS                      {::}
+              | Expresiones:exp1 MENOS MENOS                  {::}
+              | MENOS Expresiones:exp1                        {::}
+              | VariableGlobal:vg                             {::}
+              | PAR1 Operaciones:op PAR2                      {::}
+              | Operaciones:op                                {::}
+              | Numero:exp1                                   {::}
+;
+
+
+Logicos ::= Logicos:op1 AND Logicos:op2        {::}
+          | Logicos:op1 OR Logicos:op2         {::}
+          | NOT Logicos:op1                    {::}
+          | VariableGlobal:vg                  {::}
+          | PAR1 Operaciones:op PAR2           {::} 
+          | Numero:exp1                        {::}
+          | Operaciones:op                     {::}
+;
+
+
+Relacionales ::= Relacionales:exp1 IGUAL IGUAL Relacionales:exp2         {::}
+               | Relacionales:exp1 NOT IGUAL Relacionales:exp2           {::}
+               | Relacionales:exp1 MENOR Relacionales:exp2               {::}
+               | Relacionales:exp1 MAYOR Relacionales:exp2               {::}
+               | Relacionales:exp1 MENOR IGUAL Relacionales:exp2         {::}
+               | Relacionales:exp1 MAYOR IGUAL Relacionales:exp2         {::}
+               | VariableGlobal:vg                                       {::}
+               | Numero:exp1                                             {::}
+               | Alfabeto:exp1                                           {::}
+               | PAR1 Operaciones:op PAR2                                {::}
+               | Operaciones:op                                          {::}
 ;

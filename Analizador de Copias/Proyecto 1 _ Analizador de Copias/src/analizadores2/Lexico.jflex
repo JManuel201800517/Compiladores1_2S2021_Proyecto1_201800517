@@ -18,9 +18,10 @@ import java_cup.runtime.Symbol;
 
 BLANCOS = [ \r\t]+
 ENTEROS=[0-9]+
+ENTEROS2=[0-9]+
 DECIMALES= {ENTEROS} ("."? [0-9]*)?
 LETRAS =[a-zA-ZÑñ]+
-COMBINACION =(LETRAS|ENTEROS|DECIMALES)+ 
+COMBINACION =[LETRAS|ENTEROS|DECIMALES]+ 
 CADENAS =[\"\“\'] 
 
 DEFINIRGLOBALES = ("D"|"d")("E"|"e")("F"|"f")("I"|"i")("N"|"n")("I"|"i")("R"|"r")("G"|"g")("L"|"l")("O"|"o")("B"|"b")("A"|"a")("L"|"l")("E"|"e")("S"|"s")
@@ -51,6 +52,7 @@ PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")
 
 "=" {return new Symbol(sym.IGUAL, yyline, (int) yychar, yytext());}
 "C" {return new Symbol(sym.CDM, yyline, (int) yychar, yytext());}
+"/" {return new Symbol(sym.DIVIDIDO, yyline, (int) yychar, yytext());}
 
 ";" {return new Symbol(sym.PUNTOYCOMA, yyline, (int) yychar, yytext());}
 ":" {return new Symbol(sym.DOSPUNTOS, yyline, (int) yychar, yytext());}
@@ -59,7 +61,6 @@ PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")
 "}" {return new Symbol(sym.LLAVE2, yyline, (int) yychar, yytext());}
 
 "," {return new Symbol(sym.COMA, yyline, (int) yychar, yytext());}
-"." {return new Symbol(sym.PUNTO, yyline, (int) yychar, yytext());}
 
 "##" {return new Symbol(sym.COMENTARIOS, yyline, (int) yychar, yytext());}
 "#*" {return new Symbol(sym.COMENINICIAL, yyline, (int) yychar, yytext());}
@@ -97,6 +98,7 @@ PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")
 
 {BLANCOS} {}
 {ENTEROS} {return new Symbol(sym.ENTEROS, yyline, (int) yychar, yytext());}
+{ENTEROS2} {return new Symbol(sym.ENTEROS2, yyline, (int) yychar, yytext());}
 {DECIMALES} {return new Symbol(sym.DECIMALES, yyline, (int) yychar, yytext());}
 {LETRAS} {return new Symbol(sym.LETRAS, yyline, (int) yychar, yytext());}
 {COMBINACION} {return new Symbol(sym.COMBINACION, yyline, (int) yychar, yytext());}
