@@ -1,9 +1,9 @@
-package analizadores;
+package analizadores4;
 import java_cup.runtime.Symbol;
 
 %%
 
-%class lexico
+%class lexico4
 %public
 %line
 %char
