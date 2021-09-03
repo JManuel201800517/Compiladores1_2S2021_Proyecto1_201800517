@@ -1,10 +1,17 @@
 package analizadores2;
 import java_cup.runtime.*;
+import proyecto.pkg1.pkg_.analizador.de.copias.*;
 
 parser code
 {:
     public void syntax_error(Symbol s){
         System.out.println("Erroe Sintactico en la linea "+s.left+" Columna "+s.right+". No se esperaba este componente: "+s.value+".");
+    }
+
+    public void comparacion(String Direccion1, String Direccion2){
+        Compare direcciones = new Compare(Direccion1, Direccion2);
+        Interfaz_Grafica.Comparacion.add(direcciones);
+
     }
 :}
 
@@ -78,7 +85,7 @@ LlavesGra ::= LLAVE1 PalabraReservadaGrafica:pr   {::};
 
 
 LlavesFN ::= PalabraInicial:pi                                                           {::}
-          | COMPARE PAR1 Direccion:dic1 COMA Direccion:dic2 PAR2 PUNTOYCOMA LlavesFN:pi  {::}
+          | COMPARE PAR1 Direccion:dic1 COMA Direccion:dic2 PAR2 PUNTOYCOMA LlavesFN:pi  {:comparacion(dic1, dic2);:}
           | Terminacion:ter                                                              {::}
           | COMENTARIOS Comentario:com LlavesFN:inic                                     {::}
           | COMENINICIAL Comentario:com COMENFINAL LlavesFN:inic                         {::}
@@ -110,7 +117,7 @@ CaracterD ::= VariablesGlobales:vg PUNTOYCOMA             {::}
 ; 
 
 
-PalabraReservadaInstruccion ::= COMPARE PAR1 Direccion:dic1 COMA Direccion:dic2 PAR2 PUNTOYCOMA PalabraReservadaInstruccion:pi  {::}
+PalabraReservadaInstruccion ::= COMPARE PAR1 Direccion:dic1 COMA Direccion:dic2 PAR2 PUNTOYCOMA PalabraReservadaInstruccion:pi  {:comparacion(dic1, dic2);:}
                               | Inicio:ini                                                                                      {::}
 ;
 
@@ -161,14 +168,14 @@ Direccion2 ::= Alfabeto:alf                   {::}
 ;
 
 
-Alfabeto ::= LETRAS:let        {::}
-           | OTROENTERO:ent       {::}
-           | COMBINACION:com   {::}
+Alfabeto ::= LETRAS:let        {:RESULT = new String(let);:}
+           | OTROENTERO:ent    {:RESULT = new Double(ent);:}
+           | COMBINACION:com   {:RESULT = new String(com);:}
 ;
 
 
-Numero ::= ENTEROS:ent         {::}
-         | DECIMALES:dec       {::} 
+Numero ::= ENTEROS:ent         {:RESULT = new Double(ent);:}
+         | DECIMALES:dec       {:RESULT = new Double(dec);:} 
 ;
 
 
