@@ -20,9 +20,10 @@ BLANCOS = [ \r\t]+
 ENTEROS=[0-9]+
 ENTEROS2= ENTEROS
 DECIMALES= {ENTEROS} ("."? [0-9]*)?
-LETRAS =[a-zA-ZÑñ]+
+LETRAS =[a-zA-ZÑñ_-]+
 COMBINACION =[LETRAS|ENTEROS|DECIMALES]+ 
 CADENAS =[\"\“\'] 
+DIVIR = [\|/]
 
 DEFINIRGLOBALES = ("D"|"d")("E"|"e")("F"|"f")("I"|"i")("N"|"n")("I"|"i")("R"|"r")("G"|"g")("L"|"l")("O"|"o")("B"|"b")("A"|"a")("L"|"l")("E"|"e")("S"|"s")
 COMPARE = ("C"|"c")("O"|"o")("M"|"m")("P"|"p")("A"|"a")("R"|"r")("E"|"e")
@@ -51,8 +52,10 @@ PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")
 ")" {return new Symbol(sym.PAR2, yyline, (int) yychar, yytext());}
 
 "=" {return new Symbol(sym.IGUAL, yyline, (int) yychar, yytext());}
-"C" {return new Symbol(sym.CDM, yyline, (int) yychar, yytext());}
+("C"|"F") {return new Symbol(sym.CDM, yyline, (int) yychar, yytext());}
 "/" {return new Symbol(sym.DIVIDIDO, yyline, (int) yychar, yytext());}
+
+
 
 ";" {return new Symbol(sym.PUNTOYCOMA, yyline, (int) yychar, yytext());}
 ":" {return new Symbol(sym.DOSPUNTOS, yyline, (int) yychar, yytext());}
@@ -61,6 +64,7 @@ PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")
 "}" {return new Symbol(sym.LLAVE2, yyline, (int) yychar, yytext());}
 
 "," {return new Symbol(sym.COMA, yyline, (int) yychar, yytext());}
+"." {return new Symbol(sym.PUNTO, yyline, (int) yychar, yytext());}
 
 "##" {return new Symbol(sym.COMENTARIOS, yyline, (int) yychar, yytext());}
 "#*" {return new Symbol(sym.COMENINICIAL, yyline, (int) yychar, yytext());}

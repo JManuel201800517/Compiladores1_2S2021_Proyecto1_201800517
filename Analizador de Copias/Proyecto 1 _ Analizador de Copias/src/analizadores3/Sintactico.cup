@@ -6,7 +6,17 @@ parser code
     public void syntax_error(Symbol s){
         System.out.println("Erroe Sintactico en la linea "+s.left+" Columna "+s.right+". No se esperaba este componente: "+s.value+".");
     }
+
+public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error sÃ­ntactico irrecuperable en la LÃ­nea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+    } 
+
+    
+
 :}
+
 
 terminal String CORCHETE1, CORCHETE2;
 terminal String ENTEROS, OTROENTERO, DECIMALES, LETRAS, COMBINACION, CADENAS;
@@ -15,7 +25,7 @@ terminal String IGUAL;
 terminal String CDM, DIVIDIDO;
 terminal String PUNTOYCOMA, DOSPUNTOS;
 terminal String LLAVE1, LLAVE2;
-terminal String COMA, COMILLA;
+terminal String COMA, COMILLA, PUNTO;
 terminal String COMENTARIOS, COMENINICIAL, COMENFINAL;
 terminal String MONEDA;
 
@@ -49,7 +59,13 @@ non terminal Numero;
 non terminal Terminacion;
 non terminal CaracterS;
 non terminal CaracterD;
+non terminal CaracterCDM;
+non terminal CaracterB;
+non terminal CaracterX;
+non terminal CaracterV;
 non terminal VariablesGlobales;
+non terminal Varcaracter;
+non terminal Varcaracter2;
 
 
 precedence left IGUAL;
@@ -91,16 +107,23 @@ PalabraInicial ::= GRAFICABARRAS LlavesGra:enc                                  
 ;
 
 
-PalabraReservada ::= STRING Alfabeto:str IGUAL CaracterS:car PalabraReservada:inic    {::}
-                   | DOUBLE Alfabeto:str IGUAL CaracterD:car PalabraReservada:inic    {::}
+PalabraReservada ::= STRING Varcaracter:str  CaracterS:car PalabraReservada:inic    {::}
+                   | DOUBLE Varcaracter:str  CaracterD:car PalabraReservada:inic    {::}
                    | COMENTARIOS Comentario:com PalabraReservada:inic                 {::}
                    | COMENINICIAL Comentario:com COMENFINAL PalabraReservada:inic     {::}
                    | LLAVE2 LlavesFN:fin                                              {::}
 ;
 
+Varcaracter ::= Alfabeto:str Varcaracter:var {::}
+               | Numero:num Varcaracter:var  {::}
+               | IGUAL                       {::}
+;
 
 CaracterS ::= VariablesGlobales:vg PUNTOYCOMA             {::}
-            | CADENAS Alfabeto:alf CADENAS PUNTOYCOMA  {::}
+            | CADENAS Alfabeto:alf CaracterS:car              {::}
+            | Alfabeto:alf  CaracterS:car                              {::}
+            | Numero:num  CaracterS:car                                {::}
+            | CADENAS PUNTOYCOMA                          {::}
 ;
 
 
@@ -122,56 +145,89 @@ Comentario ::= Alfabeto:alf Comentario:com           {::}
 ;
 
 
-PalabraReservadaGrafica ::= TITULO DOSPUNTOS TituloGrafica:tit PUNTOYCOMA PalabraReservadaGrafica:inic          {::}
+PalabraReservadaGrafica ::= TITULO DOSPUNTOS TituloGrafica:tit PalabraReservadaGrafica:inic          {::}
                           | EJEX DOSPUNTOS CORCHETE1 EjeVariableX:ex PUNTOYCOMA PalabraReservadaGrafica:inic    {::}
                           | VALORES DOSPUNTOS CORCHETE1 Valor:val PUNTOYCOMA PalabraReservadaGrafica:inic       {::}
-                          | ARCHIVO DOSPUNTOS TituloGrafica:arch PUNTOYCOMA PalabraReservadaGrafica:inic        {::}
-                          | TITULOX DOSPUNTOS TituloGrafica:tx PUNTOYCOMA PalabraReservadaGrafica:inic          {::}
-                          | TITULOY DOSPUNTOS TituloGrafica:ty PUNTOYCOMA PalabraReservadaGrafica:inic          {::}
+                          | ARCHIVO DOSPUNTOS TituloGrafica:arch  PalabraReservadaGrafica:inic        {::}
+                          | TITULOX DOSPUNTOS TituloGrafica:tx   PalabraReservadaGrafica:inic          {::}
+                          | TITULOY DOSPUNTOS TituloGrafica:ty   PalabraReservadaGrafica:inic          {::}
                           | COMENTARIOS Comentario:com PalabraReservadaGrafica:inic                             {::}
                           | COMENINICIAL Comentario:com COMENFINAL PalabraReservadaGrafica:inic                 {::} 
                           | LLAVE2 LlavesFN:fin                                                                 {::}
 ;
 
 
-TituloGrafica ::= CADENAS Alfabeto:alf CADENAS       {::}
+TituloGrafica ::=  Varcaracter2:var        {::}
                 | VariablesGlobales:vg               {::}
 ;
 
+Varcaracter2 ::= Alfabeto:str Varcaracter2:var {::}
+               | Numero:num Varcaracter2:var  {::}
+               | CADENAS Varcaracter2:var     {::}
+               | PUNTOYCOMA           {::}
 
-EjeVariableX ::= CADENAS Alfabeto:alf CADENAS COMA EjeVariableX:ex     {::}
+;
+
+
+EjeVariableX ::= CaracterX:car {::}
                | VariablesGlobales:vg COMA EjeVariableX:ex             {::}
-               | CORCHETE2                                             {::}
+;
+
+CaracterX ::= Alfabeto:str CaracterX:ex {::}
+               | Numero:num CaracterX:es  {::}
+               | CADENAS CaracterX:es     {::}
+               | COMA  CaracterX:es   {::}
+               | CORCHETE2             {::}
 ;
 
 
-Valor ::= Numero:num COMA Valor:val                   {::}
+
+Valor ::= CaracterV:car                   {::}
         | VariablesGlobales:vg COMA Valor:val            {::}
-        | Buscador:bus                                {::}
-        | CORCHETE2                                   {::}
+
+;
+
+CaracterV ::= Alfabeto:str CaracterV:ex {::}
+               | Numero:num CaracterV:es  {::}
+               | CADENAS CaracterV:es     {::}
+               | COMA  CaracterV:es   {::}
+               | CORCHETE2             {::}
+               | Buscador:bus                                {::}
 ;
 
 
-Direccion ::= CADENAS CDM DOSPUNTOS Direccion2:dic2 CADENAS       {::};
+Direccion ::= CADENAS CDM Direccion2:dic2       {::};
 
 
-Direccion2 ::= Alfabeto:alf                   {::}
-             | Alfabeto:alf Direccion2:dic2   {::}
-             | DIVIDIDO Direccion2:dic2       {::}
+Direccion2 ::= DOSPUNTOS CaracterCDM:car1 Direccion2:dic2                 {::}
+             | CaracterCDM:car1 Direccion2:dic2   {::}
+             | CADENAS       {::}
+;
+
+CaracterCDM ::=  Alfabeto:alf CaracterCDM:car              {::}
+            | PUNTO  Alfabeto:alf                         {::}
+            | Numero:num  CaracterCDM:car                                {::}
+            | DIVIDIDO                         {::}
 ;
 
 
-Alfabeto ::= LETRAS:let        {::}
-           | OTROENTERO:ent       {::}
-           | COMBINACION:com   {::}
+Alfabeto ::= LETRAS:let        {:RESULT = new String(let);:}
+           | OTROENTERO:ent    {:RESULT = new Double(ent);:}
+           | COMBINACION:com   {:RESULT = new String(com);:}
 ;
 
 
-Numero ::= ENTEROS:ent         {::}
-         | DECIMALES:dec       {::} 
+Numero ::= ENTEROS:ent         {:RESULT = new Double(ent);:}
+         | DECIMALES:dec       {:RESULT = new Double(dec);:} 
 ;
 
 
-Buscador ::= MONEDA LLAVE1 PUNTAJEESPECIFICO COMA CADENAS Alfabeto:alf1 CADENAS COMA CADENAS Alfabeto:alf2 CADENAS COMA CADENAS Alfabeto:alf3 CADENAS LLAVE2    {::}
+Buscador ::= MONEDA LLAVE1 PUNTAJEESPECIFICO COMA  CaracterB:car1  COMA CaracterB:car2 COMA CaracterB:car3 LLAVE2    {::}
            | MONEDA LLAVE1 PUNTAJEGENERAL LLAVE2                                                                                                                {::}
 ; 
+
+CaracterB ::= CADENAS Alfabeto:alf CaracterB:car              {::}
+            | Alfabeto:alf  CaracterB:car                              {::}
+            | Numero:num  CaracterB:car                                {::}
+            | CADENAS                         {::}
+;

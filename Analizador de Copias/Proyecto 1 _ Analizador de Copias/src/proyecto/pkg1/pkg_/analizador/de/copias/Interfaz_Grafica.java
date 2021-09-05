@@ -58,6 +58,11 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
     private PrintStream standardOut;
     
     int n=2;
+    
+    int Y=0;
+    
+    String dic1, dic1r = "";
+    String dic2, dic2r = "";
 
     /**
      * Creates new form Interfaz_Grafica
@@ -80,9 +85,9 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton18.setVisible(false);
         jButton19.setVisible(false);
         
-        PrintStream printStream = new PrintStream(new Consola(jTextArea1));
+        /*PrintStream printStream = new PrintStream(new Consola(jTextArea1));
         System.setOut(printStream);
-        System.setErr(printStream);
+        System.setErr(printStream);*/
         
         //for (int i = 0; i < listaString.size(); i++) {
             //System.out.println(" ");
@@ -138,6 +143,10 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton17 = new javax.swing.JButton();
         jButton18 = new javax.swing.JButton();
         jButton19 = new javax.swing.JButton();
+        textArea4 = new java.awt.TextArea();
+        textArea5 = new java.awt.TextArea();
+        jButton20 = new javax.swing.JButton();
+        jButton21 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("FIUSAC Analizador de Copias");
@@ -304,6 +313,20 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
             }
         });
 
+        jButton20.setText("Aceptar 1");
+        jButton20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton20ActionPerformed(evt);
+            }
+        });
+
+        jButton21.setText("Aceptar 2");
+        jButton21.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton21ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -316,7 +339,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addGap(61, 61, 61)
                         .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -356,31 +379,45 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
                                 .addContainerGap())))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(textArea2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(82, 82, 82)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton20)
+                            .addComponent(jButton21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textArea4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textArea3, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton11, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jButton16)
-                            .addGap(19, 19, 19))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton17)
-                            .addContainerGap()))
-                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton18)
-                            .addComponent(jButton19))
-                        .addGap(19, 19, 19))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jButton11, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jButton16)
+                                    .addGap(19, 19, 19))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jButton17)
+                                    .addContainerGap()))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton18)
+                                    .addComponent(jButton19))
+                                .addGap(19, 19, 19))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textArea5, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,35 +429,6 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
                     .addComponent(jButton4)
                     .addComponent(jButton5))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textArea2, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                                .addGap(17, 17, 17))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textArea3, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                                .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton11)
@@ -443,7 +451,49 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
                         .addComponent(jButton18)
                         .addGap(18, 18, 18)
                         .addComponent(jButton19)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textArea4, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(textArea5, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel5)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(textArea2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(17, 17, 17))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(textArea3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addContainerGap())))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(jButton20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton21)
+                                .addGap(34, 34, 34))))))
         );
 
         pack();
@@ -638,8 +688,80 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         Guardar();
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    
+    
+    public void LeerArchivo1() {
+        String aux = "";
+        String texto = "";
+        String resultado = "";
+        String extension = "txt";
+        try {
+            JFileChooser file = new JFileChooser(System.getProperty("user.dir"));
+
+            //FileNameExtensionFilter Filter = new FileNameExtensionFilter("js files (*.fca)", "fca");
+            // add filters
+            //file.addChoosableFileFilter(Filter);
+            //file.setFileFilter(Filter);
+            file.showOpenDialog(this);
+            //jLabel3.setText(file.getSelectedFile().getName());
+            //System.out.println(file.getSelectedFile().getName());
+            //System.out.println(Comparacion.get(Y).getDireccion1());
+            File archivo = file.getSelectedFile();
+
+            if (archivo != null) {
+                FileReader archivos = new FileReader(archivo);
+                BufferedReader leer = new BufferedReader(archivos);
+                while ((aux = leer.readLine()) != null) {
+                    texto += aux + "\n";
+                }
+                leer.close();
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error Importando - " + ex);
+        }
+        textArea2.setText(texto);
+    
+    }
+    
+    public void LeerArchivo2(){
+        String aux = "";
+        String texto = "";
+        String resultado = "";
+        String extension = "txt";
+        
+        try {
+            JFileChooser file = new JFileChooser(System.getProperty("user.dir"));
+            
+            //FileNameExtensionFilter Filter = new FileNameExtensionFilter("js files (*.fca)", "fca");
+        // add filters
+            //file.addChoosableFileFilter(Filter);
+            //file.setFileFilter(Filter);
+            file.showOpenDialog(this);
+            
+            //jLabel3.setText(file.getSelectedFile().getName());
+            //System.out.println(file.getSelectedFile().getName());
+            
+            File archivo = file.getSelectedFile();
+            
+            if (archivo != null) {
+                FileReader archivos = new FileReader(archivo);
+                BufferedReader leer = new BufferedReader(archivos);
+                while ((aux = leer.readLine()) != null) {
+                    texto += aux + "\n";
+                }
+                leer.close();
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error Importando - " + ex);
+        }
+        textArea3.setText(texto);
+    }
+    
+    
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
+                int large1=0;
+                int large2=0;
         try{
              System.out.println("Iniciando Analisis Inicio Lexico"); 
              parser2 sintactico;
@@ -651,6 +773,36 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
          } catch (Exception e){
         
          }
+        
+        dic1 = Comparacion.get(Y).getDireccion1();
+        dic1r = Comparacion.get(Y).getDireccion1();
+        large1 = Comparacion.get(Y).getDireccion1().length();
+        dic2 = Comparacion.get(Y).getDireccion2();
+        dic2r = Comparacion.get(Y).getDireccion2();
+        large2 = Comparacion.get(Y).getDireccion2().length();
+        //dic1 = dic1.replaceAll('/', '\\');
+        
+        System.out.println(dic1);
+        System.out.println(dic2);
+        System.out.println(Comparacion.get(Y).getDireccion1());
+        System.out.println(Comparacion.get(Y).getDireccion2());
+        System.out.println("F:\\Universidad\\2do Semestre 2021\\Lenguajes y Compiladores 1\\Ejemplos proyecto 1\\laboratorio-olc1\\ArchivosPruebaOLC1-2S2021\\Proyecto 1\\Pruebas\\Prueba1\\pruebatext.txt");
+        System.out.println("F:\\Universidad\\2do Semestre 2021\\Lenguajes y Compiladores 1\\Ejemplos proyecto 1\\laboratorio-olc1\\ArchivosPruebaOLC1-2S2021\\Proyecto 1\\Pruebas\\Prueba1\\ProyectoB\\file.js");
+        
+        String d = "F:\\Universidad\\2do Semestre 2021\\Lenguajes y Compiladores 1\\Ejemplos proyecto 1\\laboratorio-olc1\\ArchivosPruebaOLC1-2S2021\\Proyecto 1\\Pruebas\\Prueba1\\pruebatext.txt";
+        
+        System.out.println("------");
+        System.out.println(d);
+        
+        textArea4.setText(Comparacion.get(Y).getDireccion1());
+        textArea5.setText(Comparacion.get(Y).getDireccion2());
+       //LeerArchivo1();
+       //LeerArchivo2();
+
+        
+        
+ 
+        
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -847,6 +999,17 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTabbedPane1AncestorAdded
 
+    private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
+        // TODO add your handling code here:
+        LeerArchivo1();
+        
+    }//GEN-LAST:event_jButton20ActionPerformed
+
+    private void jButton21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton21ActionPerformed
+        // TODO add your handling code here:
+        LeerArchivo2();
+    }//GEN-LAST:event_jButton21ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -901,6 +1064,8 @@ private javax.swing.JLabel grafico;
     private javax.swing.JButton jButton18;
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton20;
+    private javax.swing.JButton jButton21;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -917,9 +1082,11 @@ private javax.swing.JLabel grafico;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     public javax.swing.JTextArea jTextArea1;
-    private java.awt.TextArea textArea1;
-    private java.awt.TextArea textArea2;
-    private java.awt.TextArea textArea3;
+    public java.awt.TextArea textArea1;
+    public java.awt.TextArea textArea2;
+    public java.awt.TextArea textArea3;
+    private java.awt.TextArea textArea4;
+    public java.awt.TextArea textArea5;
     // End of variables declaration//GEN-END:variables
 
 

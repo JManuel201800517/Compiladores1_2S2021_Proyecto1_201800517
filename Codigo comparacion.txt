@@ -1,0 +1,4 @@
+System.out.println(dic1.toString());
+                                                                                                                                 System.out.println(dic2.toString());
+                                                                                                                                 Compare direcciones = new Compare(dic1.toString(), dic2.toString());
+                                                                                                                                 Interfaz_Grafica.Comparacion.add(direcciones);
