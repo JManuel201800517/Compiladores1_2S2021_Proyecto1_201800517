@@ -31,7 +31,6 @@ terminal String CONSOLE, REQUIRE;
 non terminal Inicio;
 non terminal LlavesAp;
 non terminal LlavesMet;
-non terminal LlavesFN;
 non terminal Opcion;
 non terminal Instruccion;
 non terminal Consola;
@@ -72,6 +71,7 @@ precedence left MAYOR, MENOR, IGUAL;
 precedence right IF;
 precedence right ELSE;
 precedence right WHILE;
+precedence right ENTEROS, ENTEROS2, LETRAS, COMBINACION;
 
 start with Inicio;
 
@@ -82,15 +82,10 @@ Inicio ::= CLASS Alfabeto:alf LlavesAp:enc                          {::}
 ;
 
 
-LlavesAp ::= LLAVE1 Instruccion:ins   {::};
+LlavesAp ::= LLAVE1 Instruccion:ins  LLAVE2{::};
 
 
-LlavesMet ::= LLAVE1 Instruccion:ins   {::};
-
-
-LlavesFN ::= LLAVE2 Instruccion:ins                                                      {::}                                                                 {::}
-          | COMENTARIOS Comentario:com LlavesFN:inic                                     {::}
-          | COMENINICIAL Comentario:com COMENFINAL LlavesFN:inic                         {::}
+LlavesMet ::= LLAVE1 Instruccion:ins1  LLAVE2 Instruccion:ins2{::}
 ;
 
 
@@ -98,10 +93,11 @@ Instruccion ::= PalabrasReservadas:res    {::}
               | Metodos:met                   {::}
               | Sentencias:sen            {::}
               | Llamada:da                {::}
-              | LlavesFN:fin              {::}
               | Consola:con               {::}
-              | LLAVE2                    {::}
+              | COMENTARIOS Comentario:com Instruccion:inic                                     {::}
+              | COMENINICIAL Comentario:com COMENFINAL Instruccion:inic                         {::}                          {::}
               | BREAK PUNTOYCOMA          {::}
+              |       {::}
 ; 
 
 
@@ -115,21 +111,21 @@ Sentencias ::= SentenciaIfElse:sif             {::}
 ;
 
 
-SentenciaIfElse ::= IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins SentenciaIfElse:sen    {::}
+SentenciaIfElse ::= IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins LLAVE2 SentenciaIfElse:sen    {::}
                    | IfElseIf:elif                                                              {::}
 ;
 
 
-IfElseIf ::= ELSE LLAVE1 Instruccion:ins                                                {::}
-           | ELSE IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins  IfElseIf:elif     {::}                                   
+IfElseIf ::= ELSE LLAVE1 Instruccion:ins LLAVE2 FinalLinea:fin                                               {::}
+           | ELSE IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins LLAVE2 IfElseIf:elif     {::}                                   
 ;
 
 
-SentenciaFor ::= FOR PAR1 Comando:com PUNTOYCOMA Relacionales:res PUNTOYCOMA Expresiones:exp PAR2 LLAVE1 Instruccion:ins   {::};
+SentenciaFor ::= FOR PAR1 Comando:com PUNTOYCOMA Relacionales:res PUNTOYCOMA Expresiones:exp PAR2 LLAVE1 Instruccion:ins LLAVE2 FinalLinea:fin {::};
 
 
-SentenciaWhile ::= WHILE PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins                     {::}
-                 | DO LLAVE1 Instruccion:ins WHILE PAR1 Operaciones:op PAR2 FinalLinea:fin   {::}
+SentenciaWhile ::= WHILE PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins LLAVE2 FinalLinea:fin {::}
+                 | DO LLAVE1 Instruccion:ins LLAVE2 WHILE PAR1 Operaciones:op PAR2 FinalLinea:fin   {::}
 ;
 
 
@@ -144,7 +140,7 @@ SentenciaSwitch ::= SWITCH PAR1 Elegir:ele PAR2 LLAVE1 Casos:cas        {::};
 
 
 Casos ::= CASE ENTEROS:ent DOSPUNTOS Instruccion:ins Casos:cas      {::}
-        | DEFAULT DOSPUNTOS Instruccion:ins                        {::}
+        | DEFAULT DOSPUNTOS Instruccion:ins LLAVE2 FinalLinea:fin                     {::}
 ;
 
 

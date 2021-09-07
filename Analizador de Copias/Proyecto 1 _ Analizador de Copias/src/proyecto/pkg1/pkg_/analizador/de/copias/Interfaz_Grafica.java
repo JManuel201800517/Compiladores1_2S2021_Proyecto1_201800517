@@ -85,9 +85,14 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton18.setVisible(false);
         jButton19.setVisible(false);
         
-        /*PrintStream printStream = new PrintStream(new Consola(jTextArea1));
+        PrintStream printStream = new PrintStream(new Consola(jTextArea1));
         System.setOut(printStream);
-        System.setErr(printStream);*/
+        System.setErr(printStream);
+        
+        
+
+        PrintStream standardOut = System.out;
+        PrintStream standardErr = System.err;
         
         //for (int i = 0; i < listaString.size(); i++) {
             //System.out.println(" ");
@@ -798,6 +803,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         textArea5.setText(Comparacion.get(Y).getDireccion2());
        //LeerArchivo1();
        //LeerArchivo2();
+       Y = Y+1;
 
         
         
