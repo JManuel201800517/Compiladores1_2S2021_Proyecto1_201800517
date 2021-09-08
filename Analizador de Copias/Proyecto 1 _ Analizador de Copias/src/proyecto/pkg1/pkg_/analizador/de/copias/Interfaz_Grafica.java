@@ -23,10 +23,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,6 +58,8 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
     
     public static ArrayList<Compare> Comparacion = new ArrayList<Compare>();
     
+    public static ArrayList<Variable1> var1 = new ArrayList<Variable1>();
+    
     private PrintStream standardOut;
     
     int n=2;
@@ -63,6 +68,11 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
     
     String dic1, dic1r = "";
     String dic2, dic2r = "";
+    
+    
+    private JTable tabla = null;
+    DefaultTableModel modelo = null;
+    JScrollPane desplazamiento = null;
 
     /**
      * Creates new form Interfaz_Grafica
@@ -85,14 +95,14 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton18.setVisible(false);
         jButton19.setVisible(false);
         
-        PrintStream printStream = new PrintStream(new Consola(jTextArea1));
+        /*PrintStream printStream = new PrintStream(new Consola(jTextArea1));
         System.setOut(printStream);
         System.setErr(printStream);
         
         
 
         PrintStream standardOut = System.out;
-        PrintStream standardErr = System.err;
+        PrintStream standardErr = System.err;*/
         
         //for (int i = 0; i < listaString.size(); i++) {
             //System.out.println(" ");
@@ -263,6 +273,11 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         });
 
         jButton11.setText("Reporte de Errores");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setText("Reporte Estadistico");
         jButton12.addActionListener(new java.awt.event.ActionListener() {
@@ -272,6 +287,11 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         });
 
         jButton13.setText("Reporte de Tokens");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
 
         jButton14.setText("Reporte JSON");
 
@@ -820,16 +840,23 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
              sintactico1.parse();  
              System.out.println("Fin Analisis Comparacion Archivo 1 Sintactico"); 
              
-             System.out.println("Iniciando Analisis Comparacion Archivo 2 Lexico"); 
+             /*System.out.println("Iniciando Analisis Comparacion Archivo 2 Lexico"); 
              parser4 sintactico2;
              sintactico2 = new parser4(new lexico4(new StringReader(textArea3.getText())));
              sintactico2.parse();  
-             System.out.println("Fin Analisis Comparacion Archivo 2 Sintactico"); 
+             System.out.println("Fin Analisis Comparacion Archivo 2 Sintactico"); */
 
         
          } catch (Exception e){
         
          }
+        
+        for (int i = 0; i < var1.size(); i++) {
+            System.out.println(" ");
+            System.out.println("Variable: "+var1.get(i).getVariable1());
+            System.out.println(" ");
+        }
+        
         
     }//GEN-LAST:event_jButton10ActionPerformed
 
@@ -902,39 +929,64 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         ChartFrame fr = new ChartFrame("Grafica De Lineas", chart);
         fr.pack();
         fr.setVisible(true);
+        
+        
+        TablaResumen();
     }//GEN-LAST:event_jButton16ActionPerformed
 
     public void TablaResumen(){
-         String[] columnNames = {"Nombre", "Años", "Apto",};
-        Object[][] datos = {
-            {"Juan", 25, false},
-            {"Sonia", 33, true},
-            {"Pedro", 42, false}};
+        String[] columnas = {"Tipo", "Proyecto A", "Proyecto B"};
+        JFrame tab = new JFrame();
+        tabla = new JTable();
+        modelo = new DefaultTableModel();
+        desplazamiento = new JScrollPane(tabla);       
 
-        DefaultTableModel dtm = new DefaultTableModel(datos, columnNames);
-        final JTable table = new JTable(dtm);
+        // Parametros de la ventana
+        tab.setTitle("Tabla de Resumen");
+        //tab.setDefaultCloseOperation(tab.EXIT_ON_CLOSE);
+        tab.setLayout(new BorderLayout());
+        tab.setVisible(true);
 
-        // Agregar nueva columna
-        String[] columnaNueva1 = {"vago", "diestro", "normal",};
-        dtm.addColumn("Tipo", columnaNueva1);
+        // Modelo de la tabla
+        modelo.setColumnIdentifiers(columnas);
 
-        // Agregar nueva fila
-        Object[] newRow = {"Maria", 55, false};
-        dtm.addRow(newRow);
+        // Barras de desplazamiento
+        desplazamiento.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        desplazamiento.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        // Modificar celda especifica
-        dtm.setValueAt("XXX", 3, 3); // Row/Col
+        // Propiedades de la tabla
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabla.setFillsViewportHeight(true);
 
-        table.setPreferredScrollableViewportSize(new Dimension(250, 100));
-        JScrollPane scrollPane = new JScrollPane(table);
-        getContentPane().add(scrollPane, BorderLayout.CENTER);       
-        addWindowListener(new WindowAdapter() {           
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);               
-            }
-        });
+        tabla.setModel(modelo);
+
+        // Agregamos datos
+        this.agregarDatos(modelo);
         
-        System.out.println(table);
+        
+        // Agregando elementos a la ventana
+        tab.getContentPane().add(desplazamiento, BorderLayout.NORTH);
+        tab.pack();
+    }
+    
+    private void agregarDatos(DefaultTableModel modelo) {
+        // Borramos todas las filas en la tabla
+        modelo.setRowCount(0);
+        
+        // Creamos los datos de una fila de la tabla
+        Object[] datosFila = {"Datos 0,0", "Datos 0,1", "Datos 0,2"};
+        
+        // agregamos esos datos
+        modelo.addRow(datosFila);
+        
+        // Agregamos MUCHOS mas datos
+        for(int x=0; x < 500; x++) {
+            datosFila[0] = "Datos " + x + ", 0";
+            datosFila[1] =  "Datos " + x + ", 1";
+            datosFila[2] = "Datos " + x + ", 2";
+            
+            modelo.addRow(datosFila);
+        }
     }
     
     
@@ -999,8 +1051,56 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         // TODO add your handling code here:
+        String[] columnas = {"Nombre", "Carnet", "Fecha y Hora"};
+        JFrame tab = new JFrame();
+        tabla = new JTable();
+        modelo = new DefaultTableModel();
+        desplazamiento = new JScrollPane(tabla);       
+
+        // Parametros de la ventana
+        tab.setTitle("Datos Finales");
+        //tab.setDefaultCloseOperation(tab.EXIT_ON_CLOSE);
+        tab.setLayout(new BorderLayout());
+        tab.setVisible(true);
+
+        // Modelo de la tabla
+        modelo.setColumnIdentifiers(columnas);
+
+        // Barras de desplazamiento
+        desplazamiento.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        desplazamiento.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Propiedades de la tabla
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabla.setFillsViewportHeight(true);
+
+        tabla.setModel(modelo);
+
+        // Agregamos datos
+        this.agregarDatosFinales(modelo);
+        
+        
+        // Agregando elementos a la ventana
+        tab.getContentPane().add(desplazamiento, BorderLayout.NORTH);
+        tab.pack();
     }//GEN-LAST:event_jButton19ActionPerformed
 
+        private void agregarDatosFinales(DefaultTableModel modelo) {
+        // Borramos todas las filas en la tabla
+        modelo.setRowCount(0);
+        String tt = "";
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        tt = dtf.format(LocalDateTime.now());
+        
+        // Creamos los datos de una fila de la tabla
+        Object[] datosFila = {"José Manuel Solis Ortiz", "201800517", tt};
+        
+        // agregamos esos datos
+        modelo.addRow(datosFila);
+
+    }
+        
     private void jTabbedPane1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTabbedPane1AncestorAdded
         // TODO add your handling code here:
     }//GEN-LAST:event_jTabbedPane1AncestorAdded
@@ -1016,6 +1116,122 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         LeerArchivo2();
     }//GEN-LAST:event_jButton21ActionPerformed
 
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+                String[] columnas = {"Lexema", "Tipo", "Linea", "Columna", "Archivo"};
+        JFrame tab = new JFrame();
+        tabla = new JTable();
+        modelo = new DefaultTableModel();
+        desplazamiento = new JScrollPane(tabla);       
+
+        // Parametros de la ventana
+        tab.setTitle("Reporte de Errores");
+        //tab.setDefaultCloseOperation(tab.EXIT_ON_CLOSE);
+        tab.setLayout(new BorderLayout());
+        tab.setVisible(true);
+
+        // Modelo de la tabla
+        modelo.setColumnIdentifiers(columnas);
+
+        // Barras de desplazamiento
+        desplazamiento.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        desplazamiento.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Propiedades de la tabla
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabla.setFillsViewportHeight(true);
+
+        tabla.setModel(modelo);
+
+        // Agregamos datos
+        this.agregarDatosErrores(modelo);
+        
+        
+        // Agregando elementos a la ventana
+        tab.getContentPane().add(desplazamiento, BorderLayout.NORTH);
+        tab.pack();
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        // TODO add your handling code here:
+                        String[] columnas = {"Lexema", "Token", "Linea", "Columna", "Archivo"};
+        JFrame tab = new JFrame();
+        tabla = new JTable();
+        modelo = new DefaultTableModel();
+        desplazamiento = new JScrollPane(tabla);       
+
+        // Parametros de la ventana
+        tab.setTitle("Reporte de Tokens");
+        //tab.setDefaultCloseOperation(tab.EXIT_ON_CLOSE);
+        tab.setLayout(new BorderLayout());
+        tab.setVisible(true);
+
+        // Modelo de la tabla
+        modelo.setColumnIdentifiers(columnas);
+
+        // Barras de desplazamiento
+        desplazamiento.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        desplazamiento.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Propiedades de la tabla
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabla.setFillsViewportHeight(true);
+
+        tabla.setModel(modelo);
+
+        // Agregamos datos
+        this.agregarDatosTokens(modelo);
+        
+        
+        // Agregando elementos a la ventana
+        tab.getContentPane().add(desplazamiento, BorderLayout.NORTH);
+        tab.pack();
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    
+      private void agregarDatosErrores(DefaultTableModel modelo) {
+        // Borramos todas las filas en la tabla
+        modelo.setRowCount(0);
+        
+        // Creamos los datos de una fila de la tabla
+        Object[] datosFila = {"Datos 0,0", "Datos 0,1", "Datos 0,2", "Datos 0,3", "Datos"};
+        
+        // agregamos esos datos
+        modelo.addRow(datosFila);
+        
+        // Agregamos MUCHOS mas datos
+        for(int x=0; x < 500; x++) {
+            datosFila[0] = "Datos " + x + ", 0";
+            datosFila[1] =  "Datos " + x + ", 1";
+            datosFila[2] = "Datos " + x + ", 2";
+            datosFila[3] = "Datos " + x + ", 3";
+            datosFila[4] = "Datos " + x + ", 3";
+            
+            modelo.addRow(datosFila);
+        }
+    }
+    private void agregarDatosTokens(DefaultTableModel modelo) {
+        // Borramos todas las filas en la tabla
+        modelo.setRowCount(0);
+        
+        // Creamos los datos de una fila de la tabla
+        Object[] datosFila = {"Datos 0,0", "Datos 0,1", "Datos 0,2", "Datos 0,3", "Datos"};
+        
+        // agregamos esos datos
+        modelo.addRow(datosFila);
+        
+        // Agregamos MUCHOS mas datos
+        for(int x=0; x < 500; x++) {
+            datosFila[0] = "Datos " + x + ", 0";
+            datosFila[1] =  "Datos " + x + ", 1";
+            datosFila[2] = "Datos " + x + ", 2";
+            datosFila[3] = "Datos " + x + ", 3";
+            datosFila[4] = "Datos " + x + ", 3";
+            
+            modelo.addRow(datosFila);
+        }
+    }
+        
     /**
      * @param args the command line arguments
      */
@@ -1091,7 +1307,7 @@ private javax.swing.JLabel grafico;
     public java.awt.TextArea textArea1;
     public java.awt.TextArea textArea2;
     public java.awt.TextArea textArea3;
-    private java.awt.TextArea textArea4;
+    public java.awt.TextArea textArea4;
     public java.awt.TextArea textArea5;
     // End of variables declaration//GEN-END:variables
 

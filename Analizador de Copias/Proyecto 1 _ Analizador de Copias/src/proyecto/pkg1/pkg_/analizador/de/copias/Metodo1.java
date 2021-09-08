@@ -5,6 +5,8 @@
  */
 package proyecto.pkg1.pkg_.analizador.de.copias;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Propietario
@@ -12,10 +14,12 @@ package proyecto.pkg1.pkg_.analizador.de.copias;
 public class Metodo1 {
     public String Nombre;
     public String Lineas;
+    public ArrayList<Parametro1> Parametro;
     
-    public Metodo1(String Nombre, String Lineas){
+    public Metodo1(String Nombre, String Lineas, ArrayList<Parametro1> Parametro){
         this.Nombre = Nombre;
         this.Lineas = Lineas;
+        this.Parametro = Parametro;
     }
     
     public String getNombre1(){
@@ -32,6 +36,14 @@ public class Metodo1 {
     
     public void setLineas1(String Lineas){
         this.Lineas = Lineas;
+    }
+    
+    public ArrayList<Parametro1> getParametro1(){
+        return Parametro;
+    }
+    
+    public void setLineas1(ArrayList<Parametro1> Parametro){
+        this.Parametro = Parametro;
     }
     
 }

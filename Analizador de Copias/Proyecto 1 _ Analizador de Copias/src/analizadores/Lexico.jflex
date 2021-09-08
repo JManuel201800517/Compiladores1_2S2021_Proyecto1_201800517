@@ -20,7 +20,8 @@ BLANCOS = [ \r\t]+
 ENTEROS=[0-9]+
 ENTEROS2= ENTEROS
 DECIMALES= {ENTEROS} ("."? [0-9]*)?
-LETRAS =[a-zA-ZÑñ]+
+LETRAS =[a-zA-ZÑñ_-]+
+LETRAS2 = LETRAS
 COMBINACION =(LETRAS|ENTEROS|DECIMALES)+ 
 CADENAS =[\"\“\'] 
 
@@ -104,6 +105,7 @@ CASE = ("C"|"c")("A"|"a")("S"|"s")("E"|"e")
 {ENTEROS2} {return new Symbol(sym.ENTEROS2, yyline, (int) yychar, yytext());}
 {DECIMALES} {return new Symbol(sym.DECIMALES, yyline, (int) yychar, yytext());}
 {LETRAS} {return new Symbol(sym.LETRAS, yyline, (int) yychar, yytext());}
+{LETRAS2} {return new Symbol(sym.LETRAS2, yyline, (int) yychar, yytext());}
 {COMBINACION} {return new Symbol(sym.COMBINACION, yyline, (int) yychar, yytext());}
 {CADENAS} {return new Symbol(sym.CADENAS, yyline, (int) yychar, yytext());}
 
