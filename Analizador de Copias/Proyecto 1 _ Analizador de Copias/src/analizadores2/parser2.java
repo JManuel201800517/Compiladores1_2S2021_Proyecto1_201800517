@@ -444,6 +444,8 @@ public class parser2 extends java_cup.runtime.lr_parser {
 
     public void syntax_error(Symbol s){
         System.out.println("Erroe Sintactico en la linea "+s.left+" Columna "+s.right+". No se esperaba este componente: "+s.value+".");
+        error nuevoerror = new error("Error sintactico: no se esperaba este componente", s.value.toString(), s.left, s.right, Interfaz_Grafica.jLabel3.getText());
+        Interfaz_Grafica.listalexicos.add(nuevoerror);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 

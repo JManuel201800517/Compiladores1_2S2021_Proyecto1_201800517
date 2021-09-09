@@ -1,5 +1,6 @@
 package analizadores;
 import java_cup.runtime.Symbol;
+import proyecto.pkg1.pkg_.analizador.de.copias.*;
 
 %%
 
@@ -40,6 +41,15 @@ BREAK = ("B"|"b")("R"|"r")("E"|"e")("A"|"a")("K"|"k")
 REQUIRE = ("R"|"r")("E"|"e")("Q"|"q")("U"|"u")("I"|"i")("R"|"r")("E"|"e")
 DEFAULT = ("D"|"d")("E"|"e")("F"|"f")("A"|"a")("U"|"u")("L"|"l")("T"|"t")
 CASE = ("C"|"c")("A"|"a")("S"|"s")("E"|"e")
+
+
+%{
+    public void addError(String tipo, String lexema, int fila, int columna, String Entrada)
+    {
+        error nuevoerror = new error(tipo, lexema, fila+1, columna+1, Entrada);
+        Interfaz_Grafica.listalexicos.add(nuevoerror);
+    }
+%}
 
 
 %%
@@ -111,5 +121,6 @@ CASE = ("C"|"c")("A"|"a")("S"|"s")("E"|"e")
 
 . {
    System.out.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+    addError("Error Lexico: simbolo no reconocido", yytext(), yyline, yycolumn, Interfaz_Grafica.textArea4.getText());
 }
 

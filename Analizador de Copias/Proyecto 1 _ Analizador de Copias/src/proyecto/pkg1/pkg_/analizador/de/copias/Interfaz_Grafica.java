@@ -45,6 +45,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -52,13 +54,51 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class Interfaz_Grafica extends javax.swing.JFrame {
     
-    public static ArrayList<error> listaErrores = new ArrayList<error>();
+    public static ArrayList<error> listalexicos = new ArrayList<error>();
     
     public static List<Lista> listaString = new ArrayList<>();
+    
+    public static ArrayList<Puntaje> punt = new ArrayList<Puntaje>();
     
     public static ArrayList<Compare> Comparacion = new ArrayList<Compare>();
     
     public static ArrayList<Variable1> var1 = new ArrayList<Variable1>();
+    
+    public static ArrayList<Variable1> var2 = new ArrayList<Variable1>();
+    
+    public static ArrayList<Comentario1> coment1 = new ArrayList<Comentario1>();
+    
+    public static ArrayList<Comentario1> coment2 = new ArrayList<Comentario1>();
+    
+    public static ArrayList<Parametro1> para1 = new ArrayList<Parametro1>();
+    
+    public static ArrayList<Parametro1> para2 = new ArrayList<Parametro1>();
+    
+    public static ArrayList<Metodo1> meto1 = new ArrayList<Metodo1>();
+    
+    public static ArrayList<Metodo1> meto2 = new ArrayList<Metodo1>();
+    
+    public static ArrayList<Clase1> clas1 = new ArrayList<Clase1>();
+    
+    public static ArrayList<Clase1> clas2 = new ArrayList<Clase1>();
+    
+    public static ArrayList<Elemento> puntaje = new ArrayList<Elemento>();
+    
+    public static ArrayList<Elemento> datos = new ArrayList<Elemento>();
+    
+    public static ArrayList<Titulo> BarraTitulo = new ArrayList<Titulo>();
+    
+    public static ArrayList<Valor> BarraValor = new ArrayList<Valor>();
+    
+    public static ArrayList<Titulo> PieTitulo = new ArrayList<Titulo>();
+    
+    public static ArrayList<Valor> PieValor = new ArrayList<Valor>();
+    
+    public static ArrayList<Barras> barra = new ArrayList<Barras>();
+    
+    public static ArrayList<Lineas> linea = new ArrayList<Lineas>();
+    
+    public static ArrayList<Pastel> pie = new ArrayList<Pastel>();
     
     private PrintStream standardOut;
     
@@ -68,6 +108,19 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
     
     String dic1, dic1r = "";
     String dic2, dic2r = "";
+    
+    
+    public static Double RepiVar = 0.0;
+    public static Double RepiComent = 0.0;
+    public static Double RepiMetoNombre, RepiMetoLinea, RepiMetoPara, RepiMeto = 0.0;
+    public static Double RepiClasNombre, RepiClasLinea, RepiClasMeto, RepiClas = 0.0;
+    
+    public static Double SVar = 0.0;
+    public static Double SComent = 0.0;
+    public static Double SMeto = 0.0;
+    public static Double SClas = 0.0;
+    
+    public static Double PGeneral = 0.0;
     
     
     private JTable tabla = null;
@@ -95,14 +148,14 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         jButton18.setVisible(false);
         jButton19.setVisible(false);
         
-        /*PrintStream printStream = new PrintStream(new Consola(jTextArea1));
+        PrintStream printStream = new PrintStream(new Consola(jTextArea1));
         System.setOut(printStream);
         System.setErr(printStream);
         
         
 
         PrintStream standardOut = System.out;
-        PrintStream standardErr = System.err;*/
+        PrintStream standardErr = System.err;
         
         //for (int i = 0; i < listaString.size(); i++) {
             //System.out.println(" ");
@@ -294,6 +347,11 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         });
 
         jButton14.setText("Reporte JSON");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Nombre del Archivo");
 
@@ -840,22 +898,125 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
              sintactico1.parse();  
              System.out.println("Fin Analisis Comparacion Archivo 1 Sintactico"); 
              
-             /*System.out.println("Iniciando Analisis Comparacion Archivo 2 Lexico"); 
+             System.out.println("Iniciando Analisis Comparacion Archivo 2 Lexico"); 
              parser4 sintactico2;
              sintactico2 = new parser4(new lexico4(new StringReader(textArea3.getText())));
              sintactico2.parse();  
-             System.out.println("Fin Analisis Comparacion Archivo 2 Sintactico"); */
+             System.out.println("Fin Analisis Comparacion Archivo 2 Sintactico"); 
 
         
          } catch (Exception e){
         
          }
         
+        // Variables:
+        
         for (int i = 0; i < var1.size(); i++) {
-            System.out.println(" ");
-            System.out.println("Variable: "+var1.get(i).getVariable1());
-            System.out.println(" ");
+            for (int j = 0; j < var2.size(); j++){
+                if(var1.get(i).getVariable1() == var2.get(j).getVariable1()){  
+                    RepiVar = RepiVar + 1.0;
+                    
+                    Elemento ele = new Elemento(var1.get(i).getVariable1(), "1.0");
+                    puntaje.add(ele);
+                    
+                    Puntaje point = new Puntaje(var1.get(i).getVariable1(), "1.0", "Variable", "Archivo1");
+                    punt.add(point);
+ 
+                }
+            }
         }
+        
+        
+        SVar = Double.valueOf(var1.size()) + Double.valueOf(var2.size());
+        
+        //Comentarios:
+        for (int i = 0; i < coment1.size(); i++) {
+            for (int j = 0; j < coment2.size(); j++){
+                if(coment1.get(i).getComentario1() == coment2.get(j).getComentario1()){  
+                    RepiComent = RepiComent + 1.0;  
+                    
+                    Elemento ele = new Elemento(coment1.get(i).getComentario1(), "1.0");
+                    puntaje.add(ele);
+                    Puntaje point = new Puntaje(coment1.get(i).getComentario1(), "1.0", "Comentario", "Archivo1");
+                    punt.add(point);
+                }
+            }
+        }
+        
+        SComent = Double.valueOf(coment1.size()) + Double.valueOf(coment2.size());
+        
+        // Metodos:
+        
+        for (int i = 0; i < meto1.size(); i++) {
+            for (int j = 0; j < meto2.size(); j++){
+                if(meto1.get(i).getNombre1() == meto2.get(j).getNombre1()){  
+                    RepiMetoNombre = RepiMetoNombre + 0.4;   
+                    
+                    Elemento ele = new Elemento(meto1.get(i).getNombre1(), "0.4");
+                    puntaje.add(ele);
+                    Puntaje point = new Puntaje(meto1.get(i).getNombre1(), "0.4", "Metodo", "Archivo1");
+                    punt.add(point);
+                }
+            }
+        }
+        
+        for (int i = 0; i < meto1.size(); i++) {
+            for (int j = 0; j < meto2.size(); j++){
+                if(meto1.get(i).getLineas1() == meto2.get(j).getLineas1()){  
+                    RepiMetoLinea = RepiMetoLinea + 0.3;             
+                }
+            }
+        }
+        
+        for (int i = 0; i < meto1.size(); i++) {
+            for (int j = 0; j < meto2.size(); j++){
+                if(meto1.get(i).getParametro1().size() == meto2.get(j).getParametro1().size()){  
+                    RepiMetoPara = RepiMetoPara + 0.3;             
+                }
+            }
+        }
+        
+        RepiMeto = RepiMetoNombre + RepiMetoLinea + RepiMetoPara;
+        
+        SMeto = Double.valueOf(meto1.size()) + Double.valueOf(meto2.size());
+        
+        // Clases
+        for (int i = 0; i < clas1.size(); i++) {
+            for (int j = 0; j < clas2.size(); j++){
+                if(clas1.get(i).getNombre1() == clas2.get(j).getNombre1()){  
+                    RepiClasNombre = RepiClasNombre + 0.2; 
+                    
+                    Elemento ele = new Elemento(clas1.get(i).getNombre1(), "0.2");
+                    puntaje.add(ele);
+                    Puntaje point = new Puntaje(clas1.get(i).getNombre1(), "0.2", "Clase", "Archivo1");
+                    punt.add(point);
+                    
+                    for (int r = 0; r < meto1.size(); r++) {
+                        for (int d = 0; d < meto2.size(); d++) {
+                            if (clas1.get(i).getMetodos1().get(r).getNombre1() == clas2.get(j).getMetodos1().get(d).getNombre1()) {
+                                RepiClasMeto = RepiClasMeto + 0.4;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        for (int i = 0; i < clas1.size(); i++) {
+            for (int j = 0; j < clas2.size(); j++){
+                if(clas1.get(i).getLineas1() == clas2.get(j).getLineas1()){  
+                    RepiClasLinea = RepiClasLinea + 0.4;             
+                }
+            }
+        }
+        
+        RepiClas = RepiClasNombre + RepiClasLinea + RepiClasMeto;
+        
+        SClas = Double.valueOf(clas1.size()) + Double.valueOf(clas2.size());
+        
+        // Puntaje General
+        
+        PGeneral = ((RepiComent / SComent) * 0.2) + ((RepiVar / SVar) * 0.2) + ((RepiMeto / SMeto) * 0.3) + ((RepiClas / SClas) * 0.3);
         
         
     }//GEN-LAST:event_jButton10ActionPerformed
@@ -888,7 +1049,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
         // TODO add your handling code here:
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+       /* DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         double poblacion = 25;
         int esperanza_de_vida = 5;
@@ -918,6 +1079,42 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
                 "Calculo demografico",
                 "Tiempo",
                 "Población",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                false,
+                false
+        );
+
+        //Mostramos la grafica en pantalla
+        ChartFrame fr = new ChartFrame("Grafica De Lineas", chart);
+        fr.pack();
+        fr.setVisible(true); */
+       
+             DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+
+            //Clases
+
+            dataset.addValue(RepiClas, linea.get(0).getDocumento(), " Clase");
+
+            //Metodos/Funciones
+
+            dataset.addValue(RepiMeto, linea.get(0).getDocumento(), " Metodo/Funcion" );
+
+            //Variables
+
+            dataset.addValue(RepiVar, linea.get(0).getDocumento(), " Variables" );
+            
+            //Comentarios
+            dataset.addValue(RepiComent, linea.get(0).getDocumento(), " Comentarios" );
+
+   
+
+        JFreeChart chart = ChartFactory.createLineChart(
+                linea.get(0).getNombre(),
+                "Valor",
+                "Variables",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -974,28 +1171,44 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         modelo.setRowCount(0);
         
         // Creamos los datos de una fila de la tabla
-        Object[] datosFila = {"Datos 0,0", "Datos 0,1", "Datos 0,2"};
+        Object[] datosFila = {"Tipo", "Proyecto A", "Proyecto B"};
         
         // agregamos esos datos
         modelo.addRow(datosFila);
         
         // Agregamos MUCHOS mas datos
-        for(int x=0; x < 500; x++) {
-            datosFila[0] = "Datos " + x + ", 0";
-            datosFila[1] =  "Datos " + x + ", 1";
-            datosFila[2] = "Datos " + x + ", 2";
+            datosFila[0] = "Total Variables";
+            datosFila[1] =  var1.size();
+            datosFila[2] =  var2.size();
             
             modelo.addRow(datosFila);
-        }
+            
+            datosFila[0] = "Total Clases";
+            datosFila[1] =  clas1.size();
+            datosFila[2] =  clas2.size();
+            
+            modelo.addRow(datosFila);
+            
+            datosFila[0] = "Total Metodo/Funciones";
+            datosFila[1] =  meto1.size();
+            datosFila[2] =  meto2.size();
+            
+            modelo.addRow(datosFila);
+            
+            datosFila[0] = "Total Comentarios";
+            datosFila[1] =  coment1.size();
+            datosFila[2] =  coment2.size();
+            
+            modelo.addRow(datosFila);
+
     }
     
     
     
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
         // TODO add your handling code here:
-       
-        //Grafica Barras
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        
+        /*DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         dataset.setValue(6, "2013", "Jordi");
         dataset.setValue(7, "2014", "Jordi");
@@ -1022,12 +1235,40 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         frame.pack();
         frame.setVisible(true);
         
-        TablaResumen();
+        TablaResumen();*/
+       
+        //Grafica Barras
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        
+        
+        for(int i = 0; i < BarraTitulo.size(); i++){
+            
+            dataset.setValue(Double.parseDouble(BarraValor.get(i).getValor()), "", BarraTitulo.get(i).getTitulo());
+        
+        }
+        
+        JFreeChart chart = ChartFactory.createBarChart(
+                barra.get(0).getNombre1(),
+                barra.get(0).getTituloY(), 
+                barra.get(0).getTituloX(), 
+                dataset, 
+                PlotOrientation.HORIZONTAL,
+                true, 
+                false, 
+                false
+        );
+        
+        //Mostramos la grafica en pantalla
+        ChartFrame frame = new ChartFrame("Grafica De Barras", chart);
+        frame.pack();
+        frame.setVisible(true);
+        
+
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
         // TODO add your handling code here:
-        DefaultPieDataset pieDataset = new DefaultPieDataset();
+       /* DefaultPieDataset pieDataset = new DefaultPieDataset();
         
         pieDataset.setValue("PSOE", new Integer(31));
         pieDataset.setValue("PP", new Integer(34));
@@ -1037,6 +1278,27 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         
         JFreeChart chart = ChartFactory.createPieChart(
                 "Elecciones Generales",
+                pieDataset,
+                true,
+                true,
+                false
+        );
+
+        //Mostramos la grafica en pantalla
+        ChartFrame frame = new ChartFrame("Grafica De Pie", chart);
+        frame.pack();
+        frame.setVisible(true);*/
+       
+        DefaultPieDataset pieDataset = new DefaultPieDataset();
+        
+        for(int i = 0; i < PieTitulo.size(); i++){
+            
+             pieDataset.setValue(PieTitulo.get(i).getTitulo(), new Double(Double.parseDouble(PieValor.get(i).getValor())));
+        
+        }
+        
+        JFreeChart chart = ChartFactory.createPieChart(
+                pie.get(0).getNombre1(),
                 pieDataset,
                 true,
                 true,
@@ -1188,24 +1450,57 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         tab.pack();
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        // TODO add your handling code here:
+        JSONObject obj = new JSONObject();
+		obj.put("PuntajeGeneral", PGeneral);
+		
+		JSONObject innerObj = new JSONObject();
+                
+                for(int i=0; i < punt.size(); i++){
+                    innerObj.put("Nombre", punt.get(i).Identificador);
+		    innerObj.put("Puntaje", punt.get(i).Valor);
+		    innerObj.put("Tipo", punt.get(i).Tipo);
+                    innerObj.put("Archivo", punt.get(i).Docu);
+                    
+                    obj.put("PuntajesEspecificos",innerObj);
+                
+                }
+		
+		
+
+		try {
+
+			FileWriter file = new FileWriter("Descargas");
+			file.write(obj.toJSONString());
+			file.flush();
+			file.close();
+
+		} catch (IOException e) {
+			//manejar error
+		}
+
+		System.out.print(obj);
+    }//GEN-LAST:event_jButton14ActionPerformed
+
     
       private void agregarDatosErrores(DefaultTableModel modelo) {
         // Borramos todas las filas en la tabla
         modelo.setRowCount(0);
         
         // Creamos los datos de una fila de la tabla
-        Object[] datosFila = {"Datos 0,0", "Datos 0,1", "Datos 0,2", "Datos 0,3", "Datos"};
+        Object[] datosFila = {"Lexema", "Tipo", "Linea", "Columna", "Archivo"};
         
         // agregamos esos datos
         modelo.addRow(datosFila);
         
         // Agregamos MUCHOS mas datos
-        for(int x=0; x < 500; x++) {
-            datosFila[0] = "Datos " + x + ", 0";
-            datosFila[1] =  "Datos " + x + ", 1";
-            datosFila[2] = "Datos " + x + ", 2";
-            datosFila[3] = "Datos " + x + ", 3";
-            datosFila[4] = "Datos " + x + ", 3";
+        for(int x=0; x < listalexicos.size(); x++) {
+            datosFila[0] = listalexicos.get(x).getValorError();
+            datosFila[1] =  listalexicos.get(x).getTipoError();
+            datosFila[2] = listalexicos.get(x).getFila();
+            datosFila[3] = listalexicos.get(x).getColumna();
+            datosFila[4] = listalexicos.get(x).getEntrada();
             
             modelo.addRow(datosFila);
         }
@@ -1215,7 +1510,7 @@ public class Interfaz_Grafica extends javax.swing.JFrame {
         modelo.setRowCount(0);
         
         // Creamos los datos de una fila de la tabla
-        Object[] datosFila = {"Datos 0,0", "Datos 0,1", "Datos 0,2", "Datos 0,3", "Datos"};
+        Object[] datosFila = {"Lexema", "Tipo", "Linea", "Columna", "Archivo"};
         
         // agregamos esos datos
         modelo.addRow(datosFila);
@@ -1297,7 +1592,7 @@ private javax.swing.JLabel grafico;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    public static javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
@@ -1307,8 +1602,8 @@ private javax.swing.JLabel grafico;
     public java.awt.TextArea textArea1;
     public java.awt.TextArea textArea2;
     public java.awt.TextArea textArea3;
-    public java.awt.TextArea textArea4;
-    public java.awt.TextArea textArea5;
+    public static java.awt.TextArea textArea4;
+    public static java.awt.TextArea textArea5;
     // End of variables declaration//GEN-END:variables
 
 

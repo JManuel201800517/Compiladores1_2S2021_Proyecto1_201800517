@@ -1,5 +1,6 @@
 package analizadores2;
 import java_cup.runtime.Symbol;
+import proyecto.pkg1.pkg_.analizador.de.copias.*;
 
 %%
 
@@ -42,6 +43,13 @@ ARCHIVO = ("A"|"a")("R"|"r")("C"|"c")("H"|"h")("I"|"i")("V"|"v")("O"|"o")
 PUNTAJEESPECIFICO = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")("E"|"e")("S"|"s")("P"|"p")("E"|"e")("C"|"c")("I"|"i")("F"|"f")("I"|"i")("C"|"c")("O"|"o")
 PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")("G"|"g")("E"|"e")("N"|"n")("E"|"e")("R"|"r")("A"|"a")("L"|"l")
 
+%{
+    public void addError(String tipo, String lexema, int fila, int columna, String Entrada)
+    {
+        error nuevoerror = new error(tipo, lexema, fila+1, columna+1, Entrada);
+        Interfaz_Grafica.listalexicos.add(nuevoerror);
+    }
+%}
 
 %%
 
@@ -110,5 +118,6 @@ PUNTAJEGENERAL = ("P"|"p")("U"|"u")("N"|"n")("T"|"t")("A"|"a")("J"|"j")("E"|"e")
 
 . {
    System.out.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
-}
+   addError("Error Lexico: simbolo no reconocido", yytext(), yyline, yycolumn, Interfaz_Grafica.jLabel3.getText());
+ }
 

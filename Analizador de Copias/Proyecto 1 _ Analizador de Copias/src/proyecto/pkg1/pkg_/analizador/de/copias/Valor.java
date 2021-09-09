@@ -9,21 +9,20 @@ package proyecto.pkg1.pkg_.analizador.de.copias;
  *
  * @author Propietario
  */
-public class Comentario2 {
+public class Valor {
     
-    public String Comentario;
+    public String valor;
     
-    public Comentario2(String Comentario){
-        this.Comentario = Comentario;
+    public Valor(String valor){
+        this.valor = valor;
     }
     
-    public String getComentario2(){
-        return Comentario;
+    public String getValor(){
+        return valor;
     }
     
-    public void setComentario2(String Comentario){
-        this.Comentario = Comentario;
+    public void setValor(String valor){
+        this.valor = valor;
     }
-    
     
 }

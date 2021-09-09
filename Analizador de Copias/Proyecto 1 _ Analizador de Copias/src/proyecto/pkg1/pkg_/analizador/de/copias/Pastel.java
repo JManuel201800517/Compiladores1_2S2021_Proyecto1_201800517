@@ -11,15 +11,16 @@ import java.util.ArrayList;
  *
  * @author Propietario
  */
-public class Metodo1 {
-    public String Nombre;
-    public String Lineas;
-    public ArrayList<Parametro1> Parametro;
+public class Pastel {
     
-    public Metodo1(String Nombre, String Lineas, ArrayList<Parametro1> Parametro){
+    public String Nombre;
+    public ArrayList<Titulo> EjeX;
+    public ArrayList<Valor> Numero;
+    
+    public Pastel(String Nombre, ArrayList<Titulo> EjeX, ArrayList<Valor> Numero){
         this.Nombre = Nombre;
-        this.Lineas = Lineas;
-        this.Parametro = Parametro;
+        this.EjeX = EjeX;
+        this.Numero = Numero;
     }
     
     public String getNombre1(){
@@ -30,20 +31,21 @@ public class Metodo1 {
         this.Nombre = Nombre;
     }
     
-    public String getLineas1(){
-        return Lineas;
+    public ArrayList<Titulo> getEjeX(){
+        return EjeX;
     }
     
-    public void setLineas1(String Lineas){
-        this.Lineas = Lineas;
+    public void setEjeX(ArrayList<Titulo> EjeX){
+        this.EjeX = EjeX;
     }
     
-    public ArrayList<Parametro1> getParametro1(){
-        return Parametro;
+    public ArrayList<Valor> getNumero(){
+        return Numero;
     }
     
-    public void setParametro1(ArrayList<Parametro1> Parametro){
-        this.Parametro = Parametro;
+    public void setNumero(ArrayList<Valor> Numero){
+        this.Numero = Numero;
     }
+    
     
 }

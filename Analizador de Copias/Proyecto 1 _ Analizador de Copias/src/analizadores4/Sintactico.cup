@@ -1,15 +1,23 @@
 package analizadores4;
 import java_cup.runtime.*;
+import proyecto.pkg1.pkg_.analizador.de.copias.*;
 
 parser code
 {:
     public void syntax_error(Symbol s){
         System.out.println("Erroe Sintactico en la linea "+s.left+" Columna "+s.right+". No se esperaba este componente: "+s.value+".");
+        error nuevoerror = new error("Error sintactico: no se esperaba este componente", s.value.toString(), s.left, s.right, Interfaz_Grafica.textArea5.getText());
+        Interfaz_Grafica.listalexicos.add(nuevoerror);
     }
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error sÃ­ntactico irrecuperable en la LÃ­nea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+    } 
 :}
 
 terminal String MAS, MENOS, POR, DIVIDIDO;
-terminal String ENTEROS, ENTEROS2, DECIMALES, LETRAS, COMBINACION, CADENAS;
+terminal String ENTEROS, ENTEROS2, DECIMALES, LETRAS, LETRAS2, COMBINACION, CADENAS;
 terminal String PAR1, PAR2;
 terminal String MENOR, MAYOR, IGUAL, NOT;
 terminal String PUNTOYCOMA, DOSPUNTOS;
@@ -31,7 +39,6 @@ terminal String CONSOLE, REQUIRE;
 non terminal Inicio;
 non terminal LlavesAp;
 non terminal LlavesMet;
-non terminal LlavesFN;
 non terminal Opcion;
 non terminal Instruccion;
 non terminal Consola;
@@ -60,6 +67,11 @@ non terminal Logicos;
 non terminal Relacionales;
 non terminal VariableGlobal;
 non terminal MetodoReservado;
+non terminal InicioVar;
+non terminal VarCaracter;
+non terminal MetodosVar;
+non terminal VariablesVar;
+non terminal Otro;
 
 
 precedence left MAS, MENOS;
@@ -76,32 +88,54 @@ precedence right WHILE;
 start with Inicio;
 
 
-Inicio ::= CLASS Alfabeto:alf LlavesAp:enc                          {::}
-        |  COMENTARIOS Comentario:com Inicio:inic                   {::}
-        |  COMENINICIAL Comentario:com COMENFINAL Inicio:inic       {::}
+Inicio ::= CLASS InicioVar:ini LlavesAp:enc                          {:Clase1 clase = new Clase1(ini.toString(), "30", Interfaz_Grafica.meto2);
+                                                                                 Interfaz_Grafica.clas2.add(clase);:}
+        |  COMENTARIOS Comentario:com Inicio:inic                   {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                 Interfaz_Grafica.coment1.add(comentario);:}
+        |  COMENINICIAL Comentario:com COMENFINAL Inicio:inic       {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                 Interfaz_Grafica.coment1.add(comentario);:}
+;
+
+Otro ::= CLASS InicioVar:ini LlavesAp:enc                    {:Clase1 clase = new Clase1(ini.toString(), "30", Interfaz_Grafica.meto2);
+                                                                                 Interfaz_Grafica.clas2.add(clase);:};
+
+InicioVar ::= Alfabeto:alf InicioVar:var      {:RESULT = alf + var.toString();:}
+            | Numero:num    InicioVar:var    {:RESULT = num + var.toString();:}
+            |  Alfabeto:alf                {:RESULT = alf;:}
+            | Numero:num         {:RESULT = num;:}
 ;
 
 
-LlavesAp ::= LLAVE1 Instruccion:ins   {::};
-
-
-LlavesMet ::= LLAVE1 Instruccion:ins   {::};
-
-
-LlavesFN ::= LLAVE2 Instruccion:ins                                                      {::}                                                                 {::}
-          | COMENTARIOS Comentario:com LlavesFN:inic                                     {::}
-          | COMENINICIAL Comentario:com COMENFINAL LlavesFN:inic                         {::}
+LlavesAp ::= LLAVE1 Instruccion:ins LLAVE2 Instruccion:ins2  {::}
+          |  COMENTARIOS Comentario:com LlavesAp:inic                                     {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                           Interfaz_Grafica.coment2.add(comentario);:}
+          |  COMENINICIAL Comentario:com COMENFINAL LlavesAp:inic                         {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                           Interfaz_Grafica.coment2.add(comentario);:}
 ;
+
+
+LlavesMet ::= LLAVE1 Instruccion:ins  LLAVE2 Instruccion:ins2 {::}
+          |  COMENTARIOS Comentario:com LlavesMet:inic                                     {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                            Interfaz_Grafica.coment2.add(comentario);:}
+          |  COMENINICIAL Comentario:com COMENFINAL LlavesMet:inic                         {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                            Interfaz_Grafica.coment2.add(comentario);:};
+
+
+
 
 
 Instruccion ::= PalabrasReservadas:res    {::}
               | Metodos:met                   {::}
               | Sentencias:sen            {::}
               | Llamada:da                {::}
-              | LlavesFN:fin              {::}
               | Consola:con               {::}
-              | LLAVE2                    {::}
+              | Otro:ini                    {::}
+              |               {::}
               | BREAK PUNTOYCOMA          {::}
+              | COMENTARIOS Comentario:com COMENTARIOS Instruccion:ins          {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                 Interfaz_Grafica.coment2.add(comentario);:}
+              | COMENINICIAL Comentario:com COMENFINAL Instruccion:ins          {:Comentario1 comentario = new Comentario1(com.toString());
+                                                                                 Interfaz_Grafica.coment2.add(comentario);:}
 ; 
 
 
@@ -115,32 +149,42 @@ Sentencias ::= SentenciaIfElse:sif             {::}
 ;
 
 
-SentenciaIfElse ::= IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins SentenciaIfElse:sen    {::}
+SentenciaIfElse ::= IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins LLAVE2 SentenciaIfElse:sen    {::}
                    | IfElseIf:elif                                                              {::}
 ;
 
 
-IfElseIf ::= ELSE LLAVE1 Instruccion:ins                                                {::}
-           | ELSE IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins  IfElseIf:elif     {::}                                   
+IfElseIf ::= ELSE LLAVE1 Instruccion:ins  LLAVE2 Instruccion:ins2                                            {::}
+           | ELSE IF PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins LLAVE2  IfElseIf:elif     {::}                                   
 ;
 
 
-SentenciaFor ::= FOR PAR1 Comando:com PUNTOYCOMA Relacionales:res PUNTOYCOMA Expresiones:exp PAR2 LLAVE1 Instruccion:ins   {::};
+SentenciaFor ::= FOR PAR1 Comando:com PUNTOYCOMA Operaciones:res PUNTOYCOMA Operaciones:exp PAR2 LLAVE1 Instruccion:ins  LLAVE2 Instruccion:ins2 {::};
 
 
-SentenciaWhile ::= WHILE PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins                     {::}
-                 | DO LLAVE1 Instruccion:ins WHILE PAR1 Operaciones:op PAR2 FinalLinea:fin   {::}
+SentenciaWhile ::= WHILE PAR1 Operaciones:op PAR2 LLAVE1 Instruccion:ins   LLAVE2 Instruccion:ins2                {::}
+                 | DO LLAVE1 Instruccion:ins LLAVE2 WHILE PAR1 Operaciones:op PAR2 FinalLinea:fin   {::}
 ;
 
 
-Comando ::= VAR Alfabeto:alf IGUAL Caracter:car      {::}
-          | LET Alfabeto:alf IGUAL Caracter:car      {::}
-          | CONST Alfabeto:alf IGUAL Caracter:car    {::}
-          | VariableGlobal:vg IGUAL Caracter:car     {::}
+Comando ::= VAR VarCaracter:var  IGUAL Caracter:car    {:Variable1 variables = new Variable1(var.toString());
+                                                          Interfaz_Grafica.var2.add(variables);:}
+          | LET VarCaracter:var    IGUAL Caracter:car   {:Variable1 variables = new Variable1(var.toString());
+                                                          Interfaz_Grafica.var2.add(variables);:}
+          | CONST VarCaracter:var  IGUAL Caracter:car   {:Variable1 variables = new Variable1(var.toString());
+                                                          Interfaz_Grafica.var2.add(variables);:}
+          | VarCaracter:var     IGUAL Caracter:car {:Variable1 variables = new Variable1(var.toString());
+                                                          Interfaz_Grafica.var2.add(variables);:}
+;
+
+VarCaracter ::= Alfabeto:str VarCaracter:var {:RESULT = str + var.toString();:}
+               | Numero:num VarCaracter:var  {:RESULT = num + var.toString();:}
+               |  Alfabeto:str                   {:RESULT = str;:}
+               |  Numero:num               {:RESULT = num;:}
 ;
 
 
-SentenciaSwitch ::= SWITCH PAR1 Elegir:ele PAR2 LLAVE1 Casos:cas        {::};
+SentenciaSwitch ::= SWITCH PAR1 Elegir:ele PAR2 LLAVE1 Casos:cas   LLAVE2 Instruccion:ns     {::};
 
 
 Casos ::= CASE ENTEROS:ent DOSPUNTOS Instruccion:ins Casos:cas      {::}
@@ -149,30 +193,49 @@ Casos ::= CASE ENTEROS:ent DOSPUNTOS Instruccion:ins Casos:cas      {::}
 
 
 Elegir ::= ENTEROS:ent        {::}
-         | VariableGlobal:vg  {::}
+         | LETRAS:let  {::}
 ;
 
 
-Llamada ::= MetodoReservado:mr PAR1 Variables:var PAR2 FinalLinea:fin        {::}
-          | MetodoReservado:mr PAR1 PAR2 FinalLinea:fin                      {::}
+Llamada ::= MetodosVar:mr PAR1 Variables:var PAR2 FinalLinea:fin        {::}
+          | MetodosVar:mr PAR1 PAR2 FinalLinea:fin                      {::}
 ;
 
 
-Metodos ::= Alfabeto:alf PAR1 Variables:var PAR2 LlavesMet:met        {::}
-          | Alfabeto:alf PAR1 PAR2 LlavesMet:met                      {::}
+Metodos ::= MetodosVar:mv PAR1 Variables:var PAR2 LlavesMet:met        {:Metodo1 meto = new Metodo1(mv.toString(), "2", Interfaz_Grafica.para2 );
+                                                                         Interfaz_Grafica.meto2.add(meto);:}
+          | MetodosVar:mv PAR1 PAR2 LlavesMet:met                      {:Metodo1 meto = new Metodo1(mv.toString(), "2", Interfaz_Grafica.para2 );
+                                                                         Interfaz_Grafica.meto2.add(meto);:}
+;
+
+MetodosVar ::= Alfabeto:alf MetodosVar:met     {:RESULT = alf + met.toString();:}
+             | Numero:num     MetodosVar:met   {:RESULT = num + met.toString();:}
+             |    Alfabeto:alf      {:RESULT = alf;:}
+             | Numero:num       {:RESULT=num;:}
 ;
 
 
-Variables ::= Variables:pr COMA Variables:sg     {::}
-            | VariableGlobal:vg                      {::}
-            | Numero:num                             {::}
-            | CADENAS Alfabeto:alf1 CADENAS          {::}
+Variables ::= Variables:pr COMA:co Variables:sg     {: RESULT = pr.toString() + co + sg.toString();:}
+            | Operaciones:vg                      {: RESULT = vg;
+                                                          Parametro1 para = new Parametro1(vg.toString());
+                                                          Interfaz_Grafica.para2.add(para);:} 
+;
+
+VariablesVar ::= Alfabeto:alf  VariablesVar:met     {::}
+             | Numero:num     VariablesVar:met   {::}
+             | CADENAS:cad       {::}
 ;
 
 
-PalabrasReservadas ::= VAR Alfabeto:alf IGUAL Caracter:car FinalLinea:fin   {::}
-                     | LET Alfabeto:alf IGUAL Caracter:car FinalLinea:fin   {::}
-                     | CONST Alfabeto:alf IGUAL Caracter:car FinalLinea:fin {::}
+PalabrasReservadas ::= VAR VarCaracter:var IGUAL Caracter:car  FinalLinea:fin   {:Variable1 variables = new Variable1(var.toString());
+                                                                                 Interfaz_Grafica.var2.add(variables);:}
+                     | LET VarCaracter:var IGUAL Caracter:car  FinalLinea:fin   {:Variable1 variables = new Variable1(var.toString());
+                                                                                  Interfaz_Grafica.var2.add(variables);:}
+                     | CONST VarCaracter:var IGUAL Caracter:car  FinalLinea:fin {:Variable1 variables = new Variable1(var.toString());
+                                                                                  Interfaz_Grafica.var2.add(variables);:}
+                     | VarCaracter:var  IGUAL Caracter:car  FinalLinea:fin  {:Variable1 variables = new Variable1(var.toString());
+                                                                                 Interfaz_Grafica.var2.add(variables);:}
+                     
 ;
 
 
@@ -181,70 +244,69 @@ FinalLinea ::= PUNTOYCOMA Instruccion:ins    {::}
 ;
 
 
-Caracter ::= VariableGlobal:vg            {::}
-           | Numero:num                   {::}
-           | CADENAS Alfabeto:alf CADENAS {::}
-           | Expresiones:exp              {::}
-           | REQUIRE PAR1 CADENAS PUNTO PUNTO Direccion2:dic2 CADENAS PAR2 
+Caracter ::=  Operaciones:exp              {::}
+           | REQUIRE:req PAR1:pa1 CADENAS:cad PUNTO:p1 PUNTO:p2 Direccion2:dic2  PAR2:pa2 {::}
 ;
 
 
-Direccion2 ::= Alfabeto:alf                      {::}
-             | Alfabeto:alf Direccion2:dic2      {::}
-             | DIVIDIDO Direccion2:dic2          {::} 
+
+Direccion2 ::= VariablesVar:alf                      {::}
+             | VariablesVar:alf Direccion2:dic2      {::}
+             | DIVIDIDO:div Direccion2:dic2          {::} 
 ;
 
 
-Comentario ::= Alfabeto:alf Comentario:com       {::}
-             | Numero:num Comentario:com         {::}
-             | Alfabeto:alf                      {::}
-             | Numero:num                        {::}
+
+Comentario ::= Alfabeto:alf Comentario:com       {:RESULT = alf + com.toString();:}
+             | Numero:num Comentario:com         {:RESULT = num + com.toString();:}
+             |  Alfabeto:alf                     {:RESULT = alf;:}
+             | Numero:num                        {:RESULT = num;:}
 ;
 
 
-Alfabeto ::= LETRAS:let        {::}
-           | ENTEROS2:ent       {::}
-           | COMBINACION:com   {::}
+Alfabeto ::= LETRAS:let        {:RESULT = new String(let);:}
+           | ENTEROS2:ent       {:RESULT = new Integer(ent);:}
+           | COMBINACION:com   {:RESULT = new String(com);:}
 ;
 
 
-Numero ::= ENTEROS:ent        {::}
-         | DECIMALES:dec      {::}
+Numero ::= ENTEROS:ent        {:RESULT = new Integer(ent);:}
+         | DECIMALES:dec      {:RESULT = new Double(dec);:}
 ;
 
 
-Operaciones ::= Expresiones:exp  {::}
-              | Logicos:log      {::}
-              | Relacionales:res {::}
-              | Numero:exp1      {::}
-              | VariableGlobal:vg                  {::}
-              | PAR1 Operaciones:op PAR2                                {::}
+Operaciones ::= Expresiones:exp  {:RESULT = exp;:}
+              | Logicos:log      {:RESULT = log;:}
+              | Relacionales:res {:RESULT = res;:}
+              | Numero:exp1      {:RESULT = exp1;:}
+               | Alfabeto:exp1     {:RESULT = exp1;:}
+              | CADENAS:cad VariablesVar:var       {:RESULT = cad+var;:}
+              | PAR1:p1 Operaciones:op PAR2:p2                                {:RESULT = p1 + op.toString() + p2;:}
 ;
 
 
-Expresiones ::= Operaciones:op1 MAS Operaciones:op2         {::}
-              | Operaciones:op1 MENOS Operaciones:op2       {::}
-              | Operaciones:op1 POR Operaciones:op2         {::}
-              | Operaciones:op1 DIVIDIDO Operaciones:op2   {::}
-              | Operaciones:op1 POR POR Operaciones:op2     {::}
-              | Operaciones:op1 PORCENTAJE Operaciones:op2  {::}
-              | Operaciones:op1 MAS MAS                      {::}
-              | Operaciones:op1 MENOS MENOS                  {::}
-              | MENOS Operaciones:op                       {::}
+Expresiones ::= Operaciones:op1 MAS:m Operaciones:op2         {:RESULT = op1 + m + op2;:}
+              | Operaciones:op1 MENOS:m Operaciones:op2       {:RESULT = op1 + m + op2;:}
+              | Operaciones:op1 POR:m Operaciones:op2         {:RESULT = op1 + m + op2;:}
+              | Operaciones:op1 DIVIDIDO:m Operaciones:op2   {:RESULT = op1 + m + op2;:}
+              | Operaciones:op1 POR:m POR:n Operaciones:op2     {:RESULT = op1 + m + n + op2;:}
+              | Operaciones:op1 PORCENTAJE:m Operaciones:op2  {:RESULT = op1 + m + op2;:}
+              | Operaciones:op1 MAS:m MAS:n                      {:RESULT = op1 + m + n;:}
+              | Operaciones:op1 MENOS:m MENOS:n                  {:RESULT = op1 + m + n;:}
+              | MENOS:m Operaciones:op                       {:RESULT = m + op;:}
 ;
 
 
-Logicos ::= Operaciones:op1 AND Operaciones:op2        {::}
-          | Operaciones:op1 OR Operaciones:op2         {::}
-          | NOT Operaciones:op1                    {::}
+Logicos ::= Operaciones:op1 AND:m Operaciones:op2        {:RESULT = op1 + m + op2;:}
+          | Operaciones:op1 OR:m Operaciones:op2         {:RESULT = op1 + m + op2;:}
+          | NOT:m Operaciones:op1                    {:RESULT = m + op1;:}
 ;
 
 
-Relacionales ::= Operaciones:op1 IGUAL IGUAL Operaciones:op2         {::}
-               | Operaciones:op1 NOT IGUAL Operaciones:op2           {::}
-               | Operaciones:op1 MENOR Operaciones:op2               {::}
-               | Operaciones:op1 MAYOR Operaciones:op2               {::}
-               | Operaciones:op1 MENOR IGUAL Operaciones:op2         {::}
-               | Operaciones:op1 MAYOR IGUAL Operaciones:op2         {::}
-               | Alfabeto:exp1                                           {::}
+Relacionales ::= Operaciones:op1 IGUAL:m IGUAL:n Operaciones:op2         {:RESULT = op1 + m + n + op2;:}
+               | Operaciones:op1 NOT:m IGUAL:n Operaciones:op2           {:RESULT = op1 + m + n+ op2;:}
+               | Operaciones:op1 MENOR:m Operaciones:op2               {:RESULT = op1 + m + op2;:}
+               | Operaciones:op1 MAYOR:m Operaciones:op2               {:RESULT = op1 + m + op2;:}
+               | Operaciones:op1 MENOR:m IGUAL:n Operaciones:op2         {:RESULT = op1 + m + n + op2;:}
+               | Operaciones:op1 MAYOR:m IGUAL:n Operaciones:op2         {:RESULT = op1 + m + n + op2;:}
 ;

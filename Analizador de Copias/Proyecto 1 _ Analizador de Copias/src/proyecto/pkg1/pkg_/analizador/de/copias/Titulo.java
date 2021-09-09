@@ -9,20 +9,20 @@ package proyecto.pkg1.pkg_.analizador.de.copias;
  *
  * @author Propietario
  */
-public class Parametro2 {
+public class Titulo {
     
-    public String Parametro;
+    public String titulo;
     
-    public Parametro2(String Parametro){
-        this.Parametro = Parametro;
+    public Titulo(String titulo){
+        this.titulo = titulo;
     }
     
-    public String getParametro2(){
-        return Parametro;
+    public String getTitulo(){
+        return titulo;
     }
     
-    public void setParametro2(String Parametro){
-        this.Parametro = Parametro;
+    public void setTitulo(String titulo){
+        this.titulo = titulo;
     }
     
 }

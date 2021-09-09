@@ -4,6 +4,7 @@
 
 package analizadores2;
 import java_cup.runtime.Symbol;
+import proyecto.pkg1.pkg_.analizador.de.copias.*;
 
 
 // See https://github.com/jflex-de/jflex/issues/222
@@ -594,6 +595,13 @@ public class lexico2 implements java_cup.runtime.Scanner {
   /** Whether the user-EOF-code has already been executed. */
   private boolean zzEOFDone;
 
+  /* user code: */
+    public void addError(String tipo, String lexema, int fila, int columna, String Entrada)
+    {
+        error nuevoerror = new error(tipo, lexema, fila+1, columna+1, Entrada);
+        Interfaz_Grafica.listalexicos.add(nuevoerror);
+    }
+
 
   /**
    * Creates a new scanner
@@ -1002,6 +1010,7 @@ public class lexico2 implements java_cup.runtime.Scanner {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
             { System.out.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+   addError("Error Lexico: simbolo no reconocido", yytext(), yyline, yycolumn, Interfaz_Grafica.jLabel3.getText());
             }
             // fall through
           case 44: break;

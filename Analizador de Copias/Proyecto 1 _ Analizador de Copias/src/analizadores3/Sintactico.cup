@@ -1,5 +1,6 @@
 package analizadores3;
 import java_cup.runtime.*;
+import proyecto.pkg1.pkg_.analizador.de.copias.*;
 
 parser code
 {:
@@ -40,15 +41,21 @@ terminal String ARCHIVO;
 
 non terminal Inicio;
 non terminal LlavesAp;
-non terminal LlavesGra;
+non terminal LlavesGraB;
+non terminal LlavesGraL;
+non terminal LlavesGraP;
 non terminal LlavesFN;
 non terminal InicioPrimero;
 non terminal PalabraInicial;
-non terminal PalabraReservadaGrafica;
+non terminal PalabraReservadaGraficaB;
+non terminal PalabraReservadaGraficaL;
+non terminal PalabraReservadaGraficaP;
 non terminal PalabraReservadaInstruccion;
 non terminal TituloGrafica;
-non terminal EjeVariableX;
-non terminal Valor;
+non terminal EjeVariableXB;
+non terminal EjeVariableXP;
+non terminal ValorB;
+non terminal ValorP;
 non terminal Direccion;
 non terminal Buscador;
 non terminal PalabraReservada;
@@ -68,7 +75,8 @@ non terminal Varcaracter;
 non terminal Varcaracter2;
 
 
-precedence left IGUAL;
+precedence left IGUAL, COMA;
+
 
 start with InicioPrimero;
 
@@ -90,7 +98,11 @@ Inicio ::=  DEFINIRGLOBALES LlavesAp:enc                                    {::}
 LlavesAp ::= LLAVE1 PalabraReservada:pr   {::};
 
 
-LlavesGra ::= LLAVE1 PalabraReservadaGrafica:pr   {::};
+LlavesGraB ::= LLAVE1 PalabraReservadaGraficaB:pr   {::};
+
+LlavesGraL ::= LLAVE1 PalabraReservadaGraficaL:pr   {::};
+
+LlavesGraP ::= LLAVE1 PalabraReservadaGraficaP:pr   {::};
 
 
 LlavesFN ::= PalabraInicial:pi                                                           {::}
@@ -101,35 +113,37 @@ LlavesFN ::= PalabraInicial:pi                                                  
 ;
 
 
-PalabraInicial ::= GRAFICABARRAS LlavesGra:enc                                  {::}
-                 | GRAFICALINEAS LlavesGra:enc                                  {::}
-                 | GRAFICAPIE LlavesGra:enc                                     {::}
+PalabraInicial ::= GRAFICABARRAS LlavesGraB:enc                                  {::}
+                 | GRAFICALINEAS LlavesGraL:enc                                  {::}
+                 | GRAFICAPIE LlavesGraP:enc                                     {::}
 ;
 
 
-PalabraReservada ::= STRING Varcaracter:str  CaracterS:car PalabraReservada:inic    {::}
-                   | DOUBLE Varcaracter:str  CaracterD:car PalabraReservada:inic    {::}
+PalabraReservada ::= STRING Varcaracter:str  IGUAL CADENAS  CaracterS:car  CADENAS PUNTOYCOMA PalabraReservada:inic    {:Elemento element = new Elemento(str.toString(), car.toString());
+                                                                                                                        Interfaz_Grafica.datos.add(element);:}
+                   | DOUBLE Varcaracter:str  IGUAL  CaracterD:car  PUNTOYCOMA  PalabraReservada:inic    {:Elemento element = new Elemento(str.toString(), car.toString());
+                                                                                                                        Interfaz_Grafica.datos.add(element);:}
                    | COMENTARIOS Comentario:com PalabraReservada:inic                 {::}
                    | COMENINICIAL Comentario:com COMENFINAL PalabraReservada:inic     {::}
                    | LLAVE2 LlavesFN:fin                                              {::}
 ;
 
-Varcaracter ::= Alfabeto:str Varcaracter:var {::}
-               | Numero:num Varcaracter:var  {::}
-               | IGUAL                       {::}
+Varcaracter ::= Alfabeto:str Varcaracter:var {:RESULT = str + var.toString();:}
+               | Numero:num Varcaracter:var  {:RESULT = num + var.toString();:}
+               |  Alfabeto:str                    {:RESULT = str;:}
+               | Numero:num        {:RESULT = num;:}
 ;
 
-CaracterS ::= VariablesGlobales:vg PUNTOYCOMA             {::}
-            | CADENAS Alfabeto:alf CaracterS:car              {::}
-            | Alfabeto:alf  CaracterS:car                              {::}
-            | Numero:num  CaracterS:car                                {::}
-            | CADENAS PUNTOYCOMA                          {::}
+CaracterS ::=  Alfabeto:alf CaracterS:car              {: RESULT = alf + car.toString();:}
+            | Numero:num  CaracterS:car                                {:RESULT = num + car.toString();:}
+            |  Alfabeto:str                    {:RESULT = str;:}
+            | Numero:num        {:RESULT = num;:}
 ;
 
 
-CaracterD ::= VariablesGlobales:vg PUNTOYCOMA             {::}
-            | Numero:num PUNTOYCOMA                    {::}
-            | Buscador:bus PUNTOYCOMA                  {::}
+CaracterD ::= Numero:num            {:RESULT = num;:}
+            | Numero:num CaracterD:car                    {:RESULT = num + car.toString();:}
+            | Buscador:bus                  {:RESULT = bus;:}
 ; 
 
 
@@ -145,54 +159,195 @@ Comentario ::= Alfabeto:alf Comentario:com           {::}
 ;
 
 
-PalabraReservadaGrafica ::= TITULO DOSPUNTOS TituloGrafica:tit PalabraReservadaGrafica:inic          {::}
-                          | EJEX DOSPUNTOS CORCHETE1 EjeVariableX:ex PUNTOYCOMA PalabraReservadaGrafica:inic    {::}
-                          | VALORES DOSPUNTOS CORCHETE1 Valor:val PUNTOYCOMA PalabraReservadaGrafica:inic       {::}
-                          | ARCHIVO DOSPUNTOS TituloGrafica:arch  PalabraReservadaGrafica:inic        {::}
-                          | TITULOX DOSPUNTOS TituloGrafica:tx   PalabraReservadaGrafica:inic          {::}
-                          | TITULOY DOSPUNTOS TituloGrafica:ty   PalabraReservadaGrafica:inic          {::}
-                          | COMENTARIOS Comentario:com PalabraReservadaGrafica:inic                             {::}
-                          | COMENINICIAL Comentario:com COMENFINAL PalabraReservadaGrafica:inic                 {::} 
+PalabraReservadaGraficaB ::= TITULO DOSPUNTOS TituloGrafica:tit PUNTOYCOMA
+                           EJEX DOSPUNTOS CORCHETE1 EjeVariableXB:ex CORCHETE2 PUNTOYCOMA 
+                           VALORES DOSPUNTOS CORCHETE1 ValorB:val CORCHETE2   PUNTOYCOMA 
+                           TITULOX DOSPUNTOS TituloGrafica:tx PUNTOYCOMA  
+                           TITULOY DOSPUNTOS TituloGrafica:ty  PUNTOYCOMA PalabraReservadaGraficaB:inic   {:Barras bar = new Barras(tit.toString(), Interfaz_Grafica.BarraTitulo, Interfaz_Grafica.BarraValor, tx.toString(), ty.toString());
+                                                                                                            Interfaz_Grafica.barra.add(bar);:}
+                          | COMENTARIOS Comentario:com PalabraReservadaGraficaB:inic                             {::}
+                          | COMENINICIAL Comentario:com COMENFINAL PalabraReservadaGraficaB:inic                 {::} 
+                          | LLAVE2 LlavesFN:fin                                                                 {::}
+;
+
+PalabraReservadaGraficaL ::= TITULO DOSPUNTOS TituloGrafica:tit PUNTOYCOMA 
+                             ARCHIVO DOSPUNTOS TituloGrafica:arch PUNTOYCOMA PalabraReservadaGraficaL:inic        {:Lineas lin = new Lineas(tit.toString(), arch.toString());
+                                                                                                                    Interfaz_Grafica.linea.add(lin);:}
+                          | COMENTARIOS Comentario:com PalabraReservadaGraficaL:inic                             {::}
+                          | COMENINICIAL Comentario:com COMENFINAL PalabraReservadaGraficaL:inic                 {::} 
+                          | LLAVE2 LlavesFN:fin                                                                 {::}
+;
+
+PalabraReservadaGraficaP ::= TITULO DOSPUNTOS TituloGrafica:tit PUNTOYCOMA 
+                             EJEX DOSPUNTOS CORCHETE1 EjeVariableXP:ex CORCHETE2 PUNTOYCOMA 
+                             VALORES DOSPUNTOS CORCHETE1 ValorP:val CORCHETE2   PUNTOYCOMA PalabraReservadaGraficaP:inic       {:Pastel dulce = new Pastel(tit.toString(), Interfaz_Grafica.PieTitulo, Interfaz_Grafica.PieValor);
+                                                                                                                                 Interfaz_Grafica.pie.add(dulce);:}
+                          | COMENTARIOS Comentario:com PalabraReservadaGraficaP:inic                             {::}
+                          | COMENINICIAL Comentario:com COMENFINAL PalabraReservadaGraficaP:inic                 {::} 
                           | LLAVE2 LlavesFN:fin                                                                 {::}
 ;
 
 
-TituloGrafica ::=  Varcaracter2:var        {::}
-                | VariablesGlobales:vg               {::}
+TituloGrafica ::=  CADENAS Varcaracter2:var CADENAS        {:RESULT = var;:}
+                | Varcaracter2:res           {:  int z = 0;
+                                                 int r = 0;
+                                                 for(int i= 0; i < Interfaz_Grafica.datos.size(); i++){
+                                                    if(res == Interfaz_Grafica.datos.get(i).getIdentificador()){
+                                                              z = 1;
+                                                              r = i;
+                                                              i = 1000000;
+        
+                                                      }
+                                                   }
+
+                                               if(z == 1){
+                                                     RESULT = Interfaz_Grafica.datos.get(r).getValor();
+
+                                                   }else{
+                                                      RESULT = "Dato no encontrado; Entrada Default";
+                                                   }
+
+                                                  z = 0; :}
 ;
 
-Varcaracter2 ::= Alfabeto:str Varcaracter2:var {::}
-               | Numero:num Varcaracter2:var  {::}
-               | CADENAS Varcaracter2:var     {::}
-               | PUNTOYCOMA           {::}
-
+Varcaracter2 ::= Alfabeto:alf Varcaracter2:com           {:RESULT = alf + com.toString();:}
+             | Numero:num Varcaracter2:com             {:RESULT = num + com.toString();:}
+             | Alfabeto:alf                          {:RESULT = alf;:}
+             | Numero:num                            {:RESULT = num;:}
 ;
 
 
-EjeVariableX ::= CaracterX:car {::}
-               | VariablesGlobales:vg COMA EjeVariableX:ex             {::}
+EjeVariableXB ::= CADENAS CaracterX:car CADENAS        {:RESULT = car;
+                                                         Titulo nom = new Titulo(RESULT.toString());
+                                                         Interfaz_Grafica.BarraTitulo.add(nom);:}
+               | EjeVariableXB:vg COMA:c EjeVariableXB:ex             {:RESULT = vg.toString() + c + ex.toString();:}
+               | CaracterX:car                  {:int z = 0;
+                                                 int r = 0;
+                                                 for(int i= 0; i < Interfaz_Grafica.datos.size(); i++){
+                                                    if(car == Interfaz_Grafica.datos.get(i).getIdentificador()){
+                                                              z = 1;
+                                                              r = i;
+                                                              i = 1000000;
+        
+                                                      }
+                                                   }
+
+                                               if(z == 1){
+                                                     RESULT = Interfaz_Grafica.datos.get(r).getValor();
+                                                     Titulo nom = new Titulo(RESULT.toString());
+                                                     Interfaz_Grafica.BarraTitulo.add(nom);
+
+                                                   }else{
+                                                      RESULT = "Dato no encontrado; Entrada Default";
+                                                      Titulo nom = new Titulo(RESULT.toString());
+                                                      Interfaz_Grafica.BarraTitulo.add(nom);
+                                                   }
+
+                                                  z = 0;:}
 ;
 
-CaracterX ::= Alfabeto:str CaracterX:ex {::}
-               | Numero:num CaracterX:es  {::}
-               | CADENAS CaracterX:es     {::}
-               | COMA  CaracterX:es   {::}
-               | CORCHETE2             {::}
+EjeVariableXP ::= CADENAS CaracterX:car CADENAS        {:RESULT = car;
+                                                         Titulo nom = new Titulo(RESULT.toString());
+                                                         Interfaz_Grafica.PieTitulo.add(nom);:}
+               | EjeVariableXP:vg COMA:c EjeVariableXP:ex             {:RESULT = vg.toString() + c + ex.toString();:}
+               | CaracterX:car                  {:int z = 0;
+                                                 int r = 0;
+                                                 for(int i= 0; i < Interfaz_Grafica.datos.size(); i++){
+                                                    if(car == Interfaz_Grafica.datos.get(i).getIdentificador()){
+                                                              z = 1;
+                                                              r = i;
+                                                              i = 1000000;
+        
+                                                      }
+                                                   }
+
+                                               if(z == 1){
+                                                     RESULT = Interfaz_Grafica.datos.get(r).getValor();
+                                                     Titulo nom = new Titulo(RESULT.toString());
+                                                     Interfaz_Grafica.PieTitulo.add(nom);
+
+                                                   }else{
+                                                      RESULT = "Dato no encontrado; Entrada Default";
+                                                      Titulo nom = new Titulo(RESULT.toString());
+                                                      Interfaz_Grafica.PieTitulo.add(nom);
+                                                   }
+
+                                                  z = 0;:}
+;
+
+CaracterX ::= Alfabeto:str CaracterX:ex {:RESULT = str + ex.toString();:}
+               | Numero:num CaracterX:es  {:RESULT = num + es.toString();:}
+               |  Alfabeto:alf                          {:RESULT = alf;:}
+               | Numero:num                            {:RESULT = num;:}
 ;
 
 
 
-Valor ::= CaracterV:car                   {::}
-        | VariablesGlobales:vg COMA Valor:val            {::}
+ValorB ::= CADENAS CaracterV:car CADENAS                  {:RESULT = car;
+                                                         Valor nom = new Valor(RESULT.toString());
+                                                         Interfaz_Grafica.BarraValor.add(nom);:}
+        | CaracterV:car            {:int z = 0;
+                                                 int r = 0;
+                                                 for(int i= 0; i < Interfaz_Grafica.datos.size(); i++){
+                                                    if(car == Interfaz_Grafica.datos.get(i).getIdentificador()){
+                                                              z = 1;
+                                                              r = i;
+                                                              i = 1000000;
+        
+                                                      }
+                                                   }
+
+                                               if(z == 1){
+                                                     RESULT = Interfaz_Grafica.datos.get(r).getValor();
+                                                     Valor nom = new Valor(RESULT.toString());
+                                                     Interfaz_Grafica.BarraValor.add(nom);
+
+                                                   }else{
+                                                      RESULT = "Dato no encontrado; Entrada Default";
+                                                      Valor nom = new Valor(RESULT.toString());
+                                                      Interfaz_Grafica.BarraValor.add(nom);
+                                                   }
+
+                                                  z = 0;:}
+        | ValorB:vg COMA:c ValorB:ex             {:RESULT = vg.toString() + c + ex.toString();:}
 
 ;
 
-CaracterV ::= Alfabeto:str CaracterV:ex {::}
-               | Numero:num CaracterV:es  {::}
-               | CADENAS CaracterV:es     {::}
-               | COMA  CaracterV:es   {::}
-               | CORCHETE2             {::}
-               | Buscador:bus                                {::}
+ValorP ::= CADENAS CaracterV:car CADENAS                  {:RESULT = car;
+                                                         Valor nom = new Valor(RESULT.toString());
+                                                         Interfaz_Grafica.PieValor.add(nom);:}
+        | CaracterV:car            {:int z = 0;
+                                                 int r = 0;
+                                                 for(int i= 0; i < Interfaz_Grafica.datos.size(); i++){
+                                                    if(car == Interfaz_Grafica.datos.get(i).getIdentificador()){
+                                                              z = 1;
+                                                              r = i;
+                                                              i = 1000000;
+        
+                                                      }
+                                                   }
+
+                                               if(z == 1){
+                                                     RESULT = Interfaz_Grafica.datos.get(r).getValor();
+                                                     Valor nom = new Valor(RESULT.toString());
+                                                     Interfaz_Grafica.PieValor.add(nom);
+
+                                                   }else{
+                                                      RESULT = "Dato no encontrado; Entrada Default";
+                                                      Valor nom = new Valor(RESULT.toString());
+                                                      Interfaz_Grafica.PieValor.add(nom);
+                                                   }
+
+                                                  z = 0;:}
+        | ValorP:vg COMA:c ValorP:ex             {:RESULT = vg.toString() + c + ex.toString();:}
+
+;
+
+CaracterV ::= Alfabeto:str CaracterV:ex {:RESULT = str + ex.toString();:}
+               | Numero:num CaracterV:es  {:RESULT = num + es.toString();:}
+               | Alfabeto:str   {:RESULT = str;:}
+               | Numero:num             {:RESULT = num;:}
+               | Buscador:bus                                {:RESULT = bus;:}
 ;
 
 
@@ -222,12 +377,100 @@ Numero ::= ENTEROS:ent         {:RESULT = new Double(ent);:}
 ;
 
 
-Buscador ::= MONEDA LLAVE1 PUNTAJEESPECIFICO COMA  CaracterB:car1  COMA CaracterB:car2 COMA CaracterB:car3 LLAVE2    {::}
-           | MONEDA LLAVE1 PUNTAJEGENERAL LLAVE2                                                                                                                {::}
+Buscador ::= MONEDA LLAVE1 PUNTAJEESPECIFICO COMA  CADENAS CaracterB:car1 CADENAS  COMA CADENAS CaracterB:car2 CADENAS COMA CADENAS CaracterB:car3 CADENAS LLAVE2    {:
+
+if(car2 == "clase"){ 
+int z = 0;
+int r = 0;
+for(int i= 0; i < Interfaz_Grafica.puntaje.size(); i++){
+  if(car3 == Interfaz_Grafica.puntaje.get(i).getIdentificador()){
+        z = 1;
+        r = i;
+        i = 1000000;
+        
+  }
+}
+
+if(z == 1){
+   RESULT = Interfaz_Grafica.puntaje.get(r).getValor();
+
+}else{
+   RESULT = "0.0";
+}
+
+z = 0; 
+
+}else if(car2 == "metodo"){
+int z = 0;
+int r = 0;
+for(int i= 0; i < Interfaz_Grafica.puntaje.size(); i++){
+  if(car3 == Interfaz_Grafica.puntaje.get(i).getIdentificador()){
+        z = 1;
+        r = i;
+        i = 1000000;
+        
+  }
+}
+
+if(z == 1){
+   RESULT = Interfaz_Grafica.puntaje.get(r).getValor();
+
+}else{
+   RESULT = "0.0";
+}
+
+z = 0;
+
+}else if(car2 == "variable"){
+int z = 0;
+int r = 0;
+for(int i= 0; i < Interfaz_Grafica.puntaje.size(); i++){
+  if(car3 == Interfaz_Grafica.puntaje.get(i).getIdentificador()){
+        z = 1;
+        r = i;
+        i = 1000000;
+        
+  }
+}
+
+if(z == 1){
+   RESULT = Interfaz_Grafica.puntaje.get(r).getValor();
+
+}else{
+   RESULT = "0.0";
+}
+
+z = 0;
+}else if(car2 == "comentario"){
+int z = 0;
+int r = 0;
+for(int i= 0; i < Interfaz_Grafica.puntaje.size(); i++){
+  if(car3 == Interfaz_Grafica.puntaje.get(i).getIdentificador()){
+        z = 1;
+        r = i;
+        i = 1000000;
+        
+  }
+}
+
+if(z == 1){
+   RESULT = Interfaz_Grafica.puntaje.get(r).getValor();
+
+}else{
+   RESULT = "0.0";
+}
+
+z = 0;
+}else{
+System.out.println("Elemento no reconocido");}
+
+
+:}
+           | MONEDA LLAVE1 PUNTAJEGENERAL LLAVE2   {:RESULT = Interfaz_Grafica.PGeneral.toString();:}                                                                                                             {::}
 ; 
 
-CaracterB ::= CADENAS Alfabeto:alf CaracterB:car              {::}
-            | Alfabeto:alf  CaracterB:car                              {::}
-            | Numero:num  CaracterB:car                                {::}
-            | CADENAS                         {::}
+CaracterB ::= Alfabeto:alf  CaracterB:car                              {:RESULT = alf + car.toString();:}
+            | Numero:num  CaracterB:car                                {:RESULT = num + car.toString();:}
+            | Alfabeto:cad                        {:RESULT = cad;:}
+            | Numero:num                          {:RESULT = num;:}
 ;

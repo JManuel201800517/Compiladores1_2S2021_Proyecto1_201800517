@@ -14,12 +14,14 @@ public class error {
     public String valorError;
     public int fila;
     public int columna;
+    public String Entrada;
     
-    public error(String tipoError, String valorError, int fila, int columna){
+    public error(String tipoError, String valorError, int fila, int columna, String Entrada){
         this.tipoError = tipoError;
         this.valorError = valorError;
         this.fila = fila;
         this.columna = columna;
+        this.Entrada = Entrada;
     }
     
     public String getTipoError(){
@@ -51,6 +53,14 @@ public class error {
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+    
+    public String getEntrada(){
+        return Entrada;
+    }
+    
+    public void setEntrada(String Entrada){
+        this.Entrada = Entrada;
     }
     
 }
